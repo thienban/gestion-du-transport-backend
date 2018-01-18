@@ -21,7 +21,7 @@ public class Collaborateur {
 
 	@Column
 	private String password;
-	
+
 	@Enumerated
 	private Role role;
 
@@ -36,6 +36,10 @@ public class Collaborateur {
 
 	@Column
 	private String photo;
+
+	public Collaborateur() {
+		this.role = Role.COLLABORATEUR;
+	}
 
 	public Integer getId() {
 		return id;
