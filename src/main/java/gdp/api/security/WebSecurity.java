@@ -21,7 +21,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.headers().frameOptions().disable().and().cors().and().csrf().disable().authorizeRequests()
 				.antMatchers("/h2-console/**").permitAll().anyRequest().authenticated().and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-				//.addFilter(new JWTAuthorizationFilter(authenticationManager()))
+				.addFilter(new JWTAuthorizationFilter(authenticationManager()))
 				// this disables session creation on Spring Security
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//.and().formLogin().loginProcessingUrl("/api/login").permitAll();
 	}
