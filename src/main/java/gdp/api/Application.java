@@ -22,9 +22,8 @@ public class Application {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 				.allowedOrigins("*")
-				//.allowCredentials(true)
 				.exposedHeaders("Authorization")
-				.allowedMethods("GET", "POST", "PATCH");//.allowedHeaders("Access-Control-Allow-Origin","Authorization");
+				.allowedMethods("GET", "POST", "PATCH");
 			}
 		};
 	}
