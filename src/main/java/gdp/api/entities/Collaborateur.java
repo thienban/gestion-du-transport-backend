@@ -27,7 +27,7 @@ public class Collaborateur {
 
 	@Column
 	private String nom;
-
+	
 	@Column
 	private String prenom;
 

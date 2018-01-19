@@ -15,5 +15,6 @@ public interface CollabService {
 	Observable<List<Collaborateur>> getCollabInfoByEmail(@Query("email") String email);
 
 	@GET("collaborateurs")
-	Observable<List<Collaborateur>> getCollaborateurs();
+	Observable<List<Collaborateur>> getCollaborateurs(@Query("_limit") Integer limit);
+	
 }

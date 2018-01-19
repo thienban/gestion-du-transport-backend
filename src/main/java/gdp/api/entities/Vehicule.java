@@ -5,14 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="VEHICULE")
+//@Entity
+//@Table(name="VEHICULE")
 public class Vehicule {
-	
+	/*
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -23,18 +21,16 @@ public class Vehicule {
 	@Column(name="NB_PLACES")
 	private Integer nbPlaces;
 	
-	@Column(name="PHOTO")
+	@Column(name="photo")
 	private String photo;
 	
 	@Column(name="STATUS")
 	private StatusVehicule status;
 	
-	@ManyToOne()
-	@JoinColumn(name="ID_CATEGORIE")
+	@Column(name="ID_CATEGORIE")
 	private Categorie categorie;
 	
-	@ManyToOne()
-	@JoinColumn(name="ID_MARQUE")
+	@Column(name="ID_MARQUE")
 	private Marque marque;
 
 	public Vehicule() {
@@ -96,5 +92,6 @@ public class Vehicule {
 	public void setMarque(Marque marque) {
 		this.marque = marque;
 	}
+	*/
 	
 }

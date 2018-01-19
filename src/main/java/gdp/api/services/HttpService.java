@@ -22,7 +22,7 @@ public class HttpService {
 		if (collabSvc == null) {
 			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 			// set your desired log level
-			logging.setLevel(Level.BODY);
+			logging.setLevel(Level.BASIC);
 			OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 			httpClient.addInterceptor(logging);
 			Retrofit retrofit = new Retrofit.Builder().baseUrl("https://collab-json-api.herokuapp.com/")
