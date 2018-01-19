@@ -8,13 +8,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import gdp.api.entities.Collaborateur;
+import gdp.api.entities.Role;
 import gdp.api.repository.CollaborateurRepository;
-import gdp.api.services.CollabService;
 import gdp.api.services.HttpService;
-import rx.Observable;
 
-import static java.util.Collections.emptyList;
-
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -33,9 +31,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		Collaborateur collabExist = collaborateurRepository.findByEmail(email);
 		String password;
 		String mail;
+		Role role;
 		if (collabExist != null) {
 			password = collabExist.getPassword();
 			mail = collabExist.getEmail();
+			role = collabExist.getRole();
 		} else {
 			List<Collaborateur> newCollab = http.getService().getCollabInfoByEmail(email).toBlocking().first();
 
@@ -45,7 +45,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			collaborateurRepository.save(newCollab.get(0));
 			password = newCollab.get(0).getPassword();
 			mail = newCollab.get(0).getEmail();
+			role = newCollab.get(0).getRole();
 		}
-		return new User(mail, password, emptyList());
+		User user = new User(mail, password, Arrays.asList(role.getAuthority()));
+		
+		return user;
+		
 	}
 }
