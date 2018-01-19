@@ -16,4 +16,5 @@ public interface CollabService {
 
 	@GET("collaborateurs")
 	Observable<List<Collaborateur>> getCollaborateurs();
+	
 }
