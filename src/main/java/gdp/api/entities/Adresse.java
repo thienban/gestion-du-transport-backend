@@ -1,34 +1,45 @@
-package entite;
+package gdp.api.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name="ADRESSE")
 public class Adresse {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-	@Column(name="NUMERO")
+
+	@Column(name = "NUMERO")
 	private Integer numero;
-	
-	@Column(name="RUE")
+
+	@Column(name = "RUE")
 	private String rue;
-	
-	@Column(name="VILLE")
+
+	@Column(name = "VILLE")
 	private String ville;
-	
-	@Column(name="CODE_POSTAL")
+
+	@Column(name = "CODE_POSTAL")
 	private Integer codePostal;
 
 	public Adresse() {
-		
+	}
+
+	/**
+	 * @param numero
+	 * @param rue
+	 * @param ville
+	 * @param codePostal
+	 */
+	public Adresse(Integer numero, String rue, String ville, Integer codePostal) {
+		super();
+		this.numero = numero;
+		this.rue = rue;
+		this.ville = ville;
+		this.codePostal = codePostal;
 	}
 
 	public Integer getId() {

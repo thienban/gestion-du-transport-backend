@@ -1,4 +1,4 @@
-package entite;
+package gdp.api.entities;
 
 public enum StatusVehicule {
 

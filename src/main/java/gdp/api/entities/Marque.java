@@ -1,4 +1,4 @@
-package entite;
+package gdp.api.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="CATEGORIE")
-public class Categorie {
-	
+@Table(name="MARQUE")
+public class Marque {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -18,7 +18,7 @@ public class Categorie {
 	@Column(name="LIBELLE")
 	private String libelle;
 
-	public Categorie() {
+	public Marque() {
 		
 	}
 
@@ -37,5 +37,5 @@ public class Categorie {
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
-
+	
 }

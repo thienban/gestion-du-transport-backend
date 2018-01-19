@@ -1,4 +1,4 @@
-package entite;
+package gdp.api.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,10 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="VEHICULE")
+//@Entity
+//@Table(name="VEHICULE")
 public class Vehicule {
-	
+	/*
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -92,5 +92,6 @@ public class Vehicule {
 	public void setMarque(Marque marque) {
 		this.marque = marque;
 	}
+	*/
 	
 }
