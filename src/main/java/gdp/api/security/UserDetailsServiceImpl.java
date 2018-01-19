@@ -9,9 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import gdp.api.entities.Collaborateur;
 import gdp.api.repository.CollaborateurRepository;
-import gdp.api.services.CollabService;
 import gdp.api.services.HttpService;
-import rx.Observable;
 
 import static java.util.Collections.emptyList;
 
