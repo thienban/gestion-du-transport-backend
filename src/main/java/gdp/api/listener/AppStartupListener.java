@@ -17,7 +17,7 @@ import rx.Observable;
 @Component
 public class AppStartupListener {
 	final static Logger LOGGER = LoggerFactory.getLogger(AppStartupListener.class);
-	
+
 	@Autowired
 	HttpService http;
 
@@ -26,8 +26,9 @@ public class AppStartupListener {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void initDatabase() {
+		LOGGER.info("DataBase Initialisation");
 		AtomicInteger counter = new AtomicInteger();
-		http.getService().getCollaborateurs().flatMap(collabs -> Observable.from(collabs)).limit(20).map(collab -> {
+		http.getService().getCollaborateurs(20).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
 			counter.incrementAndGet();
 			if (counter.get() < 4) {
 				collab.setRole(Role.ADMIN);
