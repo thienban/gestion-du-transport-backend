@@ -47,6 +47,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			mail = newCollab.get(0).getEmail();
 			role = newCollab.get(0).getRole();
 		}
-		return new User(mail, password, Arrays.asList(role.getAuthority()));
+		User user = new User(mail, password, Arrays.asList(role.getAuthority()));
+		
+		return user;
+		
 	}
 }
