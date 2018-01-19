@@ -18,9 +18,9 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Annonce {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="ID")
 	private Integer id;
 
 	@ManyToOne

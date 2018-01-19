@@ -18,7 +18,6 @@ import gdp.api.entities.Role;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
-import gdp.api.repository.ReservCovoiturageRepository;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
@@ -31,9 +30,6 @@ public class AppStartupListener {
 
 	@Autowired
 	CollaborateurRepository collabRepo;
-	
-	@Autowired
-	ReservCovoiturageRepository reservCovoitRepo;
 
 	@Autowired
 	AnnonceRepository annonceRepo;
