@@ -41,7 +41,7 @@ public class AppStartupListener {
 	public void initDatabase() {
 		LOGGER.info("DataBase Initialisation");
 		AtomicInteger counter = new AtomicInteger();
-		http.getService().getCollaborateurs(20).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
+		http.getCollabService().getCollaborateurs(20).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
 			counter.incrementAndGet();
 			if (counter.get() < 4) {
 				collab.setRole(Role.ADMIN);
