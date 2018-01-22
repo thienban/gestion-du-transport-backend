@@ -61,6 +61,8 @@ public class AppStartupListener {
 	}
 
 	private void creerAnnonce() {
+		
+		// Annonce 1
 		Collaborateur auteur = collabRepo.findOne(15);
 		Annonce annonce = new Annonce();
 		annonce.setAuteur(auteur);
@@ -68,6 +70,7 @@ public class AppStartupListener {
 		annonce.setNbPlaces(4);
 		annonce.setAdresseDepart("3 rue de la paix Paris 75018");
 		annonce.setAdresseArrive("3 rue de la soif Rennes 44000");
+
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
 
@@ -82,5 +85,32 @@ public class AppStartupListener {
 
 		LOGGER.info("Reservations ajoutées");
 
+		
+		for (int i = 2; i<20 ; i++) {
+			
+			Collaborateur auteur2 = collabRepo.findOne(15);
+			Annonce annonce2 = new Annonce();
+			annonce2.setAuteur(auteur2);
+			
+			LocalDateTime dateHisto1 = LocalDateTime.of(2003, 01, 01, 12, 1, 2);
+			annonce2.setDateDepart(dateHisto1);
+			annonce2.setNbPlaces(4);
+			annonce2.setAdresseDepart("3 rue de la paix Paris 75018");
+			annonce2.setAdresseArrive("3 rue de la soif Rennes 44000");
+			
+			annonceRepo.save(annonce2);
+			LOGGER.info("Annonce sauvée");
+			
+			
+			LOGGER.info("Ajout de passagers ...");
+
+			List<Collaborateur> passagers2 = annonce2.getPassagers();
+			passagers2.add(collabRepo.findOne(13));
+			passagers2.add(collabRepo.findOne(12));
+			annonce2.setPassagers(passagers2);
+			annonceRepo.save(annonce2);
+			LOGGER.info("Reservations ajoutées");
+		}
+	
 	}
 }

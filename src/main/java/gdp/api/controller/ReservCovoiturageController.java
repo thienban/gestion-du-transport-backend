@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,18 +33,20 @@ public class ReservCovoiturageController {
 		return annonceRepo.findAll();
 	}
 
-	@GetMapping(path = "/{matricule}")
-	public List<Annonce> MesReservations(@PathVariable("matricule") String matricule) {
-		Collaborateur collab = collabRepo.findByMatricule(matricule);
+
+	@GetMapping(path = "/me")
+	public List<Annonce> MesReservations() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findAll().stream().filter(annonce -> {
 			return annonce.getPassagers().contains(collab);
 		}).collect(Collectors.toList());
 	}
 
-	@PostMapping(path = "/creer/{matricule}")
-	public Annonce CreerReservations(@PathVariable("matricule") String matricule,
-			@Param("annonce_id") Integer annonce_id) {
-		Collaborateur collab = collabRepo.findByMatricule(matricule);
+	@PostMapping(path = "/creer")
+	public Annonce CreerReservations(@Param("annonce_id") Integer annonce_id) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
 		Annonce annonce = annonceRepo.getOne(annonce_id);
 		if (annonce.getNbPlacesRestantes() > 0) {
 			List<Collaborateur> passagers = annonce.getPassagers();
