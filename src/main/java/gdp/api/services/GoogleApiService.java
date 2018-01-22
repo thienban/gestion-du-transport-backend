@@ -12,6 +12,7 @@ import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 
+import gdp.api.entities.Annonce;
 import gdp.api.entities.TrajetInfo;
 
 @Service
@@ -34,6 +35,20 @@ public class GoogleApiService {
 		info.setDistance(leg.distance);
 		info.setDuration(leg.duration);
 		return info;
+	}
+
+	public Annonce populateTrajetInfo(Annonce annonce) {
+		try {
+			TrajetInfo info = getTrajetInfo(annonce.getAdresseDepartString(), annonce.getAdresseArriveString());
+			annonce.setDateArrivee(annonce.getDateDepart().plusSeconds((info.getDuration().inSeconds)));
+			annonce.setDistance(info.getDistance());
+			annonce.setDureeTrajet(info.getDuration());
+		} catch (ApiException | InterruptedException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			return annonce;
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -20,6 +21,7 @@ public class Collaborateur {
 	private String matricule;
 
 	@Column
+	@JsonIgnore
 	private String password;
 
 	@Enumerated

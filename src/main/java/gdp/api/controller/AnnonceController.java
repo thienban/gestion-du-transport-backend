@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,30 +15,44 @@ import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.services.GoogleApiService;
 
 @RestController
 @RequestMapping("annonces")
 public class AnnonceController {
-	@Autowired AnnonceRepository annonceRepo;
-	@Autowired CollaborateurRepository collabRepo;
-	
+	@Autowired
+	AnnonceRepository annonceRepo;
+	@Autowired
+	CollaborateurRepository collabRepo;
+	@Autowired
+	GoogleApiService googleApiSvc;
+
 	@GetMapping
-	public List<Annonce> findAllAnnonces(){
+	public List<Annonce> findAllAnnonces() {
 		return annonceRepo.findAll();
 	}
-	
-	@PostMapping(path = "/creer/")
+
+	/**
+	 * Crée une annonce pour l'utilisateur courant
+	 */
+	@PostMapping(path = "/creer")
 	public List<Annonce> creerAnnonce(@RequestBody Annonce nouvAnnonce) {
-		annonceRepo.save(nouvAnnonce);
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
+		nouvAnnonce.setAuteur(collab);
+		Annonce annonce = googleApiSvc.populateTrajetInfo(nouvAnnonce);
+		annonceRepo.save(annonce);
 		return annonceRepo.findAll();
 	}
-	
-	@GetMapping(path="/{matricule}")
-	public List<Annonce> annoncesOfId(@PathVariable("matricule") String matricule) {
-		Collaborateur collab = collabRepo.findByMatricule(matricule);
-		return annonceRepo.findAll().stream().filter(annonce -> {
-			return annonce.getAuteur().equals(collab);
-		}).collect(Collectors.toList());
+
+	/**
+	 * Récupère les annonces de l'utilisateur courant
+	 */
+	@GetMapping(path = "/me")
+	public List<Annonce> getUserAnnonces() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
+		return annonceRepo.findByAuteur(collab);
 	}
-	
+
 }

@@ -1,6 +1,5 @@
 package gdp.api.listener;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,13 +11,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.google.maps.errors.ApiException;
 
 import gdp.api.entities.Adresse;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Role;
-import gdp.api.entities.TrajetInfo;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
@@ -86,19 +83,9 @@ public class AppStartupListener {
 		passagers.add(collabRepo.findOne(13));
 		passagers.add(collabRepo.findOne(12));
 		annonce.setPassagers(passagers);
-
-		try {
-			TrajetInfo info = googleApiSvc.getTrajetInfo(annonce.getAdresseDepartString(),
-					annonce.getAdresseArriveString());
-			annonce.setDateArrivee(annonce.getDateDepart().plusSeconds((info.getDuration().inSeconds)));
-			annonce.setDistance(info.getDistance());
-			annonce.setDureeTrajet(info.getDuration());
-		} catch (ApiException | InterruptedException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			annonceRepo.save(annonce);
-		}
+		
+		googleApiSvc.populateTrajetInfo(annonce);
+		annonceRepo.save(annonce);
 
 		LOGGER.info("Reservations ajoutées");
 
