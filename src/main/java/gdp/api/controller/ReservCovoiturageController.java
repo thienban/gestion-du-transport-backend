@@ -36,17 +36,16 @@ public class ReservCovoiturageController {
 	@GetMapping(path = "/me")
 	public List<Annonce> MesReservations() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
 		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findAll().stream().filter(annonce -> {
 			return annonce.getPassagers().contains(collab);
 		}).collect(Collectors.toList());
 	}
 
-	@PostMapping(path = "/creer/{matricule}")
-	public Annonce CreerReservations(@PathVariable("matricule") String matricule,
-			@Param("annonce_id") Integer annonce_id) {
-		Collaborateur collab = collabRepo.findByMatricule(matricule);
+	@PostMapping(path = "/creer")
+	public Annonce CreerReservations(@Param("annonce_id") Integer annonce_id) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
 		Annonce annonce = annonceRepo.getOne(annonce_id);
 		if (annonce.getNbPlacesRestantes() > 0) {
 			List<Collaborateur> passagers = annonce.getPassagers();
