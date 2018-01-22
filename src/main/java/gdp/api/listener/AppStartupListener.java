@@ -1,5 +1,7 @@
 package gdp.api.listener;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -9,8 +11,15 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+
+import gdp.api.entities.Adresse;
+import gdp.api.entities.Annonce;
+import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Role;
+import gdp.api.repository.AdresseRepository;
+import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
@@ -24,11 +33,20 @@ public class AppStartupListener {
 	@Autowired
 	CollaborateurRepository collabRepo;
 
+	@Autowired
+	AnnonceRepository annonceRepo;
+
+	@Autowired
+	AdresseRepository adresseRepo;
+
+	@Autowired
+	GoogleApiService googleApiSvc;
+
 	@EventListener(ApplicationReadyEvent.class)
 	public void initDatabase() {
 		LOGGER.info("DataBase Initialisation");
 		AtomicInteger counter = new AtomicInteger();
-		http.getService().getCollaborateurs(20).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
+		http.getCollabService().getCollaborateurs(20).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
 			counter.incrementAndGet();
 			if (counter.get() < 4) {
 				collab.setRole(Role.ADMIN);
@@ -38,6 +56,31 @@ public class AppStartupListener {
 			return collab;
 		}).toList().subscribe(collabs -> {
 			collabRepo.save(collabs);
+			creerAnnonce();
 		});
+	}
+
+	private void creerAnnonce() {
+		Collaborateur auteur = collabRepo.findOne(15);
+		Annonce annonce = new Annonce();
+		annonce.setAuteur(auteur);
+		annonce.setDateDepart(LocalDateTime.now());
+		annonce.setNbPlaces(4);
+		annonce.setAdresseDepart("3 rue de la paix Paris 75018");
+		annonce.setAdresseArrive("3 rue de la soif Rennes 44000");
+		annonceRepo.save(annonce);
+		LOGGER.info("Annonce sauvée");
+
+		LOGGER.info("Ajout de passagers ...");
+		List<Collaborateur> passagers = annonce.getPassagers();
+		passagers.add(collabRepo.findOne(13));
+		passagers.add(collabRepo.findOne(12));
+		annonce.setPassagers(passagers);
+		
+		googleApiSvc.populateTrajetInfo(annonce);
+		annonceRepo.save(annonce);
+
+		LOGGER.info("Reservations ajoutées");
+
 	}
 }

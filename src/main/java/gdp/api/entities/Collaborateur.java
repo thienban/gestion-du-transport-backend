@@ -7,7 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,6 +23,7 @@ public class Collaborateur {
 	private String matricule;
 
 	@Column
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
 	@Enumerated
@@ -27,7 +31,7 @@ public class Collaborateur {
 
 	@Column
 	private String nom;
-
+	
 	@Column
 	private String prenom;
 
