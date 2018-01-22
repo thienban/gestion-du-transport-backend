@@ -18,7 +18,7 @@ public class HttpService {
 
 	}
 
-	public CollabService getService() {
+	public CollabService getCollabService() {
 		if (collabSvc == null) {
 			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 			// set your desired log level

@@ -41,12 +41,13 @@ public class ReservCovoiturageController {
 
 	@PostMapping(path = "/creer/{matricule}")
 	public Annonce CreerReservations(@PathVariable("matricule") String matricule,
-			@Param("annonce") Integer annonce_id) {
+			@Param("annonce_id") Integer annonce_id) {
 		Collaborateur collab = collabRepo.findByMatricule(matricule);
 		Annonce annonce = annonceRepo.getOne(annonce_id);
 		if (annonce.getNbPlacesRestantes() > 0) {
 			List<Collaborateur> passagers = annonce.getPassagers();
 			passagers.add(collab);
+			annonce.setPassagers(passagers);
 			annonceRepo.save(annonce);
 		}
 		return annonce;

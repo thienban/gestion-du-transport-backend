@@ -9,24 +9,28 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import gdp.api.repository.CollaborateurRepository;
+import gdp.api.services.TokenService;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
+
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	TokenService tokenSvc;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.headers().frameOptions().disable().and().cors().and().csrf().disable().authorizeRequests()
 				.antMatchers("/h2-console/**").permitAll().anyRequest().authenticated().and()
-				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+				.addFilter(new JWTAuthenticationFilter(authenticationManager(), tokenSvc))
 				.addFilter(new JWTAuthorizationFilter(authenticationManager()))
 				// this disables session creation on Spring Security
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//.and().formLogin().loginProcessingUrl("/api/login").permitAll();
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// .and().formLogin().loginProcessingUrl("/api/login").permitAll();
 	}
 
 	@Override
