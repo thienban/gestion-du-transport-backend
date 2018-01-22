@@ -67,7 +67,7 @@ public class AppStartupListener {
 		
 		Adresse adresseArrivee = new Adresse(3, "rue de la soif", "Rennes", 44000);
 		adresseRepo.save(adresseArrivee);
-		annonce.setAdresseDepart(adresseArrivee);
+		annonce.setAdresseArrive(adresseArrivee);
 		
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");

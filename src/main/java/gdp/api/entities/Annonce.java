@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -60,7 +59,15 @@ public class Annonce {
 		}
 		return nbPlaces - passagers.size();
 	}
-
+	
+	public String getAdresseDepartString() {
+		return adresseDepart.toString();
+	}
+	
+	public String getAdresseArriveString() {
+		return adresseArrive.toString();
+	}
+	
 	public Integer getId() {
 		return id;
 	}
