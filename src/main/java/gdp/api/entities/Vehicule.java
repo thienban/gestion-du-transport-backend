@@ -1,10 +1,12 @@
-package entite;
+package gdp.api.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,10 +29,12 @@ public class Vehicule {
 	@Column(name="STATUS")
 	private StatusVehicule status;
 	
-	@Column(name="ID_CATEGORIE")
+	@ManyToOne()
+	@JoinColumn(name="ID_CATEGORIE")
 	private Categorie categorie;
 	
-	@Column(name="ID_MARQUE")
+	@ManyToOne()
+	@JoinColumn(name="ID_MARQUE")
 	private Marque marque;
 
 	public Vehicule() {
@@ -92,5 +96,6 @@ public class Vehicule {
 	public void setMarque(Marque marque) {
 		this.marque = marque;
 	}
+	
 	
 }

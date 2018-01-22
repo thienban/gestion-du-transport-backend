@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Collaborateur {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -21,13 +22,13 @@ public class Collaborateur {
 
 	@Column
 	private String password;
-	
+
 	@Enumerated
 	private Role role;
 
 	@Column
 	private String nom;
-
+	
 	@Column
 	private String prenom;
 
@@ -36,6 +37,10 @@ public class Collaborateur {
 
 	@Column
 	private String photo;
+
+	public Collaborateur() {
+		this.role = Role.COLLABORATEUR;
+	}
 
 	public Integer getId() {
 		return id;
