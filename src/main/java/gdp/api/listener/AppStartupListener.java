@@ -1,5 +1,6 @@
 package gdp.api.listener;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,13 +12,17 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.google.maps.errors.ApiException;
+
 import gdp.api.entities.Adresse;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Role;
+import gdp.api.entities.TrajetInfo;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
@@ -35,7 +40,10 @@ public class AppStartupListener {
 	AnnonceRepository annonceRepo;
 
 	@Autowired
-	AdresseRepository adresseRepo;;
+	AdresseRepository adresseRepo;
+
+	@Autowired
+	GoogleApiService googleApiSvc;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void initDatabase() {
@@ -64,22 +72,35 @@ public class AppStartupListener {
 		Adresse adresseDepart = new Adresse(3, "rue de la paix", "Paris", 75018);
 		adresseRepo.save(adresseDepart);
 		annonce.setAdresseDepart(adresseDepart);
-		
+
 		Adresse adresseArrivee = new Adresse(3, "rue de la soif", "Rennes", 44000);
 		adresseRepo.save(adresseArrivee);
-		annonce.setAdresseDepart(adresseArrivee);
-		
+		annonce.setAdresseArrive(adresseArrivee);
+
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
-		
-		
+
 		LOGGER.info("Ajout de passagers ...");
 
 		List<Collaborateur> passagers = annonce.getPassagers();
 		passagers.add(collabRepo.findOne(13));
 		passagers.add(collabRepo.findOne(12));
 		annonce.setPassagers(passagers);
-		annonceRepo.save(annonce);
+
+		try {
+			TrajetInfo info = googleApiSvc.getTrajetInfo(annonce.getAdresseDepartString(),
+					annonce.getAdresseArriveString());
+			annonce.setDateArrivee(annonce.getDateDepart().plusSeconds((info.getDuration().inSeconds)));
+			annonce.setDistance(info.getDistance());
+			annonce.setDureeTrajet(info.getDuration());
+		} catch (ApiException | InterruptedException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			annonceRepo.save(annonce);
+		}
+
 		LOGGER.info("Reservations ajoutées");
+
 	}
 }

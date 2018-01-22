@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -15,6 +14,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import com.google.maps.model.Distance;
+import com.google.maps.model.Duration;
 
 @Entity
 public class Annonce {
@@ -45,10 +47,11 @@ public class Annonce {
 	private Adresse adresseArrive;
 
 	@Column
-	private Integer dureeTrajet;
-
+	private Duration dureeTrajet;
+	
+	
 	@Column
-	private Integer distance;
+	private Distance distance;
 
 	@ManyToMany
 	@JoinTable(name = "RESERVATIONS_COVOIT", joinColumns = @JoinColumn(name = "ANNONCE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PASSAGERS_ID", referencedColumnName = "ID"))
@@ -60,7 +63,15 @@ public class Annonce {
 		}
 		return nbPlaces - passagers.size();
 	}
-
+	
+	public String getAdresseDepartString() {
+		return adresseDepart.toString();
+	}
+	
+	public String getAdresseArriveString() {
+		return adresseArrive.toString();
+	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -125,20 +136,20 @@ public class Annonce {
 		this.adresseArrive = adresseArrive;
 	}
 
-	public Integer getDureeTrajet() {
+	public Duration getDureeTrajet() {
 		return dureeTrajet;
 	}
 
-	public void setDureeTrajet(Integer dureeTrajet) {
-		this.dureeTrajet = dureeTrajet;
+	public void setDureeTrajet(Duration duration) {
+		this.dureeTrajet = duration;
 	}
 
-	public Integer getDistance() {
+	public Distance getDistance() {
 		return distance;
 	}
 
-	public void setDistance(Integer distance) {
-		this.distance = distance;
+	public void setDistance(Distance distance2) {
+		this.distance = distance2;
 	}
 
 	public List<Collaborateur> getPassagers() {
