@@ -9,6 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import gdp.api.repository.CollaborateurRepository;
+
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
@@ -18,6 +20,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
 		http.headers().frameOptions().disable().and().cors().and().csrf().disable().authorizeRequests()
 				.antMatchers("/h2-console/**").permitAll().anyRequest().authenticated().and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager()))

@@ -31,9 +31,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
-	@Autowired
-	private CollaborateurRepository collabRepo;
-	
 	private AuthenticationManager authenticationManager;
 
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -58,11 +55,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			Authentication auth) throws IOException, ServletException {
 
 		String role = auth.getAuthorities().toArray()[0].toString();
-		Collaborateur collab = collabRepo.findByEmail(((User) auth.getPrincipal()).getUsername());
 		String token = Jwts.builder().setSubject(((User) auth.getPrincipal()).getUsername())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				  .claim("role", role)
-				  .claim("matricule", collab.getMatricule())
 				.signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).compact();
 		res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
 	}
