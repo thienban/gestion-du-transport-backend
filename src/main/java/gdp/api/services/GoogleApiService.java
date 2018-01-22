@@ -2,6 +2,7 @@ package gdp.api.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,14 @@ import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
+import com.google.maps.model.AutocompletePrediction;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 
 import gdp.api.entities.Annonce;
 import gdp.api.entities.TrajetInfo;
+import io.jsonwebtoken.lang.Collections;
 
 @Service
 public class GoogleApiService {
@@ -55,7 +58,17 @@ public class GoogleApiService {
 	
 	
 	public List<String> autocompleteAdress(String adresseStr){
-		PlacesApi.placeAutocomplete(geoApiContext, adresseStr);
+		try {
+			AutocompletePrediction[] predictions = PlacesApi.placeAutocomplete(geoApiContext, adresseStr).await() ;
+			List<AutocompletePrediction> listPredictions = Collections.arrayToList(predictions);
+			return listPredictions.stream().map(p -> p.description).collect(Collectors.toList());
+			
+			
+		} catch (ApiException | InterruptedException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 		return null;
 	}
 
