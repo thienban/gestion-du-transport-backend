@@ -11,6 +11,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+
 import gdp.api.entities.Adresse;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
@@ -37,7 +38,7 @@ public class AppStartupListener {
 
 	@Autowired
 	AdresseRepository adresseRepo;
-	
+
 	@Autowired
 	GoogleApiService googleApiSvc;
 
@@ -72,7 +73,6 @@ public class AppStartupListener {
 		Adresse adresseArrivee = new Adresse(3, "rue de la soif", "Rennes", 44000);
 		adresseRepo.save(adresseArrivee);
 		annonce.setAdresseArrive(adresseArrivee);
-		
 
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
@@ -83,11 +83,11 @@ public class AppStartupListener {
 		passagers.add(collabRepo.findOne(13));
 		passagers.add(collabRepo.findOne(12));
 		annonce.setPassagers(passagers);
+		
+		googleApiSvc.populateTrajetInfo(annonce);
 		annonceRepo.save(annonce);
+
 		LOGGER.info("Reservations ajoutées");
-		
-		
-		
-		
+
 	}
 }
