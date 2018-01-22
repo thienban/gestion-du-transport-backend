@@ -1,12 +1,14 @@
 package gdp.api.services;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
+import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
@@ -49,6 +51,12 @@ public class GoogleApiService {
 		} finally {
 			return annonce;
 		}
+	}
+	
+	
+	public List<String> autocompleteAdress(String adresseStr){
+		PlacesApi.placeAutocomplete(geoApiContext, adresseStr);
+		return null;
 	}
 
 }
