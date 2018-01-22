@@ -66,19 +66,12 @@ public class AppStartupListener {
 		annonce.setAuteur(auteur);
 		annonce.setDateDepart(LocalDateTime.now());
 		annonce.setNbPlaces(4);
-		Adresse adresseDepart = new Adresse(3, "rue de la paix", "Paris", 75018);
-		adresseRepo.save(adresseDepart);
-		annonce.setAdresseDepart(adresseDepart);
-
-		Adresse adresseArrivee = new Adresse(3, "rue de la soif", "Rennes", 44000);
-		adresseRepo.save(adresseArrivee);
-		annonce.setAdresseArrive(adresseArrivee);
-
+		annonce.setAdresseDepart("3 rue de la paix Paris 75018");
+		annonce.setAdresseArrive("3 rue de la soif Rennes 44000");
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
 
 		LOGGER.info("Ajout de passagers ...");
-
 		List<Collaborateur> passagers = annonce.getPassagers();
 		passagers.add(collabRepo.findOne(13));
 		passagers.add(collabRepo.findOne(12));
