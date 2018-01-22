@@ -48,8 +48,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			role = newCollab.get(0).getRole();
 		}
 		User user = new User(mail, password, Arrays.asList(role.getAuthority()));
-		
+
 		return user;
-		
+
 	}
 }

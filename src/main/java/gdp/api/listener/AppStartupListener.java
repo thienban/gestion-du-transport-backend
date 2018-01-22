@@ -18,6 +18,7 @@ import gdp.api.entities.Role;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
@@ -35,7 +36,10 @@ public class AppStartupListener {
 	AnnonceRepository annonceRepo;
 
 	@Autowired
-	AdresseRepository adresseRepo;;
+	AdresseRepository adresseRepo;
+	
+	@Autowired
+	GoogleApiService googleApiSvc;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void initDatabase() {
@@ -64,15 +68,14 @@ public class AppStartupListener {
 		Adresse adresseDepart = new Adresse(3, "rue de la paix", "Paris", 75018);
 		adresseRepo.save(adresseDepart);
 		annonce.setAdresseDepart(adresseDepart);
-		
+
 		Adresse adresseArrivee = new Adresse(3, "rue de la soif", "Rennes", 44000);
 		adresseRepo.save(adresseArrivee);
 		annonce.setAdresseDepart(adresseArrivee);
-		
+
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
-		
-		
+
 		LOGGER.info("Ajout de passagers ...");
 
 		List<Collaborateur> passagers = annonce.getPassagers();
@@ -81,5 +84,9 @@ public class AppStartupListener {
 		annonce.setPassagers(passagers);
 		annonceRepo.save(annonce);
 		LOGGER.info("Reservations ajoutées");
+		
+		
+		
+		
 	}
 }
