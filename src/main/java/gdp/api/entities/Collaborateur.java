@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Collaborateur {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
