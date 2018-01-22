@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +32,12 @@ public class ReservCovoiturageController {
 	public List<Annonce> ListAnnonce() {
 		return annonceRepo.findAll();
 	}
-	
-	@GetMapping(path = "/{matricule}")
-	public List<Annonce> MesReservations(@PathVariable("matricule") String matricule) {
-		Collaborateur collab = collabRepo.findByMatricule(matricule);
+
+	@GetMapping(path = "/me")
+	public List<Annonce> MesReservations() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findAll().stream().filter(annonce -> {
 			return annonce.getPassagers().contains(collab);
 		}).collect(Collectors.toList());
