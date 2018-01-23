@@ -37,7 +37,6 @@ public class ReservCovoiturageController {
 	public List<Annonce> MesReservations() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
-
 		return annonceRepo.findAll().stream().filter(annonce -> {
 			return annonce.getPassagers().contains(collab);
 		}).collect(Collectors.toList());
