@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties.Credential;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gdp.api.entities.Collaborateur;
+import gdp.api.entities.EmailPasswordCredential;
 import gdp.api.services.TokenService;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -36,8 +38,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
 			throws AuthenticationException {
 		try {
-			Collaborateur creds = new ObjectMapper().readValue(req.getInputStream(), Collaborateur.class);
-
+			EmailPasswordCredential creds = new ObjectMapper().readValue(req.getInputStream(), EmailPasswordCredential.class);
 			return authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword(), new ArrayList<>()));
 		} catch (IOException e) {

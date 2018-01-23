@@ -11,6 +11,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+
 import gdp.api.entities.Adresse;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Categorie;
@@ -24,6 +25,7 @@ import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.MarqueRepository;
+import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
@@ -48,6 +50,9 @@ public class AppStartupListener {
 	
 	@Autowired 
 	CategorieRepository categorieRepo;
+
+	@Autowired
+	GoogleApiService googleApiSvc;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void initDatabase() {
@@ -90,29 +95,33 @@ public class AppStartupListener {
 		Annonce annonce = new Annonce();
 		annonce.setAuteur(auteur);
 		annonce.setDateDepart(LocalDateTime.now());
+
 		annonce.setNbPlacesDispos(4);
 		
 		Adresse adresseDepart = new Adresse(1, "rue de la paix", "Paris", 75018);
 		adresseRepo.save(adresseDepart);
-		annonce.setAdresseDepart(adresseDepart);
 		
 		Adresse adresseArrivee = new Adresse(1, "rue de la soif", "Rennes", 44000);
 		adresseRepo.save(adresseArrivee);
-		annonce.setAdresseArrive(adresseArrivee);
 		
 		annonce.setVehicule(v1);
-		
+
+		annonce.setNbPlacesDispos(4);
+		annonce.setAdresseDepart("3 rue de la paix Paris 75018");
+		annonce.setAdresseArrive("3 rue de la soif Rennes 44000");
+
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
-		
-		
-		LOGGER.info("Ajout de passagers ...");
 
+		LOGGER.info("Ajout de passagers ...");
 		List<Collaborateur> passagers = annonce.getPassagers();
 		passagers.add(collabRepo.findOne(13));
 		passagers.add(collabRepo.findOne(12));
 		annonce.setPassagers(passagers);
+		
+		googleApiSvc.populateTrajetInfo(annonce);
 		annonceRepo.save(annonce);
+
 		LOGGER.info("Reservations ajoutées");
 		
 		for (int i = 2; i<40 ; i++) {
@@ -125,13 +134,11 @@ public class AppStartupListener {
 			annonce2.setDateDepart(dateHisto1);
 			annonce2.setNbPlacesDispos(4);
 			
-			Adresse adresseDepart2 = new Adresse(i, "rue de la paix", "Paris", 75018);
-			adresseRepo.save(adresseDepart2);
-			annonce2.setAdresseDepart(adresseDepart2);
+			annonce2.setAdresseDepart("3 rue de la paix Paris 75018");
 			
 			Adresse adresseArrivee2 = new Adresse(i, "rue de la soif", "Rennes", 44000);
 			adresseRepo.save(adresseArrivee2);
-			annonce2.setAdresseArrive(adresseArrivee2);
+			annonce2.setAdresseArrive("3 rue de la soif Rennes 44000");
 			
 			annonceRepo.save(annonce2);
 			LOGGER.info("Annonce sauvée");

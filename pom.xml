@@ -75,6 +75,13 @@
 			<artifactId>spring-boot-starter-logging</artifactId>
 		</dependency>
 
+		<!-- GOOGLE API -->
+		<dependency>
+			<groupId>com.google.maps</groupId>
+			<artifactId>google-maps-services</artifactId>
+			<version>0.2.6</version>
+		</dependency>
+
 		<!-- HTTP REQUESTS -->
 		<dependency>
 			<groupId>com.squareup.retrofit2</groupId>

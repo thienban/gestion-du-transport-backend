@@ -43,6 +43,10 @@ public class Adresse {
 		this.ville = ville;
 		this.codePostal = codePostal;
 	}
+	
+	public String toString() {
+		return numero +" "+ rue+ " " + " " + ville + " " + codePostal;
+	}
 
 	public Integer getId() {
 		return id;

@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+	
 	@Autowired
 	private CollaborateurRepository collaborateurRepository;
 
@@ -48,8 +49,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			role = newCollab.get(0).getRole();
 		}
 		User user = new User(mail, password, Arrays.asList(role.getAuthority()));
-		
+
 		return user;
-		
+
 	}
 }

@@ -11,10 +11,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import com.google.maps.model.Distance;
+import com.google.maps.model.Duration;
 
 @Entity
 public class Annonce {
@@ -38,20 +41,19 @@ public class Annonce {
 	@Enumerated
 	private StatusCovoit statusCovoit;
 
-	@ManyToOne
-	private Adresse adresseDepart;
-
-	@ManyToOne
-	private Adresse adresseArrive;
+	@Column
+	private String adresseDepart;
 
 	@Column
-	private Integer dureeTrajet;
-
-	@Column
-	private Integer distance;
+	private String adresseArrive;
 	
 	@Embedded
 	private VehiculeCovoit vehicule;
+	private Duration dureeTrajet;
+	
+	
+	@Column
+	private Distance distance;
 
 	@ManyToMany
 	@JoinTable(name = "RESERVATIONS_COVOIT", joinColumns = @JoinColumn(name = "ANNONCE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PASSAGERS_ID", referencedColumnName = "ID"))
@@ -63,7 +65,7 @@ public class Annonce {
 		}
 		return nbPlacesDispos - passagers.size();
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -112,36 +114,20 @@ public class Annonce {
 		this.statusCovoit = status;
 	}
 
-	public Adresse getAdresseDepart() {
-		return adresseDepart;
-	}
-
-	public void setAdresseDepart(Adresse adresseDepart) {
-		this.adresseDepart = adresseDepart;
-	}
-
-	public Adresse getAdresseArrive() {
-		return adresseArrive;
-	}
-
-	public void setAdresseArrive(Adresse adresseArrive) {
-		this.adresseArrive = adresseArrive;
-	}
-
-	public Integer getDureeTrajet() {
+	public Duration getDureeTrajet() {
 		return dureeTrajet;
 	}
 
-	public void setDureeTrajet(Integer dureeTrajet) {
-		this.dureeTrajet = dureeTrajet;
+	public void setDureeTrajet(Duration duration) {
+		this.dureeTrajet = duration;
 	}
 
-	public Integer getDistance() {
+	public Distance getDistance() {
 		return distance;
 	}
 
-	public void setDistance(Integer distance) {
-		this.distance = distance;
+	public void setDistance(Distance distance2) {
+		this.distance = distance2;
 	}
 
 	public List<Collaborateur> getPassagers() {
@@ -150,6 +136,22 @@ public class Annonce {
 
 	public void setPassagers(List<Collaborateur> passagers) {
 		this.passagers = passagers;
+	}
+
+	public String getAdresseDepart() {
+		return adresseDepart;
+	}
+
+	public void setAdresseDepart(String adresseDepart) {
+		this.adresseDepart = adresseDepart;
+	}
+
+	public String getAdresseArrive() {
+		return adresseArrive;
+	}
+
+	public void setAdresseArrive(String adresseArrive) {
+		this.adresseArrive = adresseArrive;
 	}
 
 	public VehiculeCovoit getVehicule() {
