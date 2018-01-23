@@ -35,10 +35,14 @@ public class GoogleApiService {
 			throws ApiException, InterruptedException, IOException {
 		TrajetInfo info = new TrajetInfo();
 		DirectionsResult resDir = getDirections(origin, destination);
-		DirectionsRoute route = resDir.routes[resDir.routes.length - 1];
-		DirectionsLeg leg = route.legs[route.legs.length - 1];
-		info.setDistance(leg.distance);
-		info.setDuration(leg.duration);
+		if(resDir.routes.length>0) {
+			DirectionsRoute route = resDir.routes[resDir.routes.length - 1];
+			if(route.legs.length>0) {
+				DirectionsLeg leg = route.legs[route.legs.length - 1];
+				info.setDistance(leg.distance);
+				info.setDuration(leg.duration);
+			}
+		}
 		return info;
 	}
 

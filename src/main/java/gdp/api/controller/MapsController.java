@@ -33,7 +33,7 @@ public class MapsController {
 		return googleApiSvc.autocompleteAdress(input);
 	}
 
-	@GetMapping(path = "/directions")
+	@GetMapping(value = "/directions")
 	public TrajetInfo getTrajetInfo(@RequestParam("origin") String origin,@RequestParam("destination") String destination) throws ApiException, InterruptedException, IOException {
 		return googleApiSvc.getTrajetInfo(origin, destination);
 	}
