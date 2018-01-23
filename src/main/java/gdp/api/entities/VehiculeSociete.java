@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="VEHICULE")
-public class Vehicule {
+public class VehiculeSociete {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class Vehicule {
 	@JoinColumn(name="ID_MARQUE")
 	private Marque marque;
 
-	public Vehicule() {
+	public VehiculeSociete() {
 		
 	}
 
