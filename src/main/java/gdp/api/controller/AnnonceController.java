@@ -39,6 +39,7 @@ public class AnnonceController {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		nouvAnnonce.setAuteur(collab);
+		System.out.println(nouvAnnonce.getAdresseDepart());
 		Annonce annonce = googleApiSvc.populateTrajetInfo(nouvAnnonce);
 		annonceRepo.save(annonce);
 		return annonce;

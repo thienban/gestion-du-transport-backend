@@ -108,6 +108,7 @@ public class AppStartupListener {
 			passagers2.add(collabRepo.findOne(13));
 			passagers2.add(collabRepo.findOne(12));
 			annonce2.setPassagers(passagers2);
+			googleApiSvc.populateTrajetInfo(annonce2);
 			annonceRepo.save(annonce2);
 			LOGGER.info("Reservations ajoutées");
 		}

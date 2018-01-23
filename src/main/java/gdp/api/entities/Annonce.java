@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.google.maps.model.Distance;
 import com.google.maps.model.Duration;
 
@@ -34,8 +36,6 @@ public class Annonce {
 	@Column
 	private LocalDateTime dateArrivee;
 
-	@Column
-	private Integer nbPlaces;
 
 	@Enumerated
 	private StatusCovoit status;
@@ -49,6 +49,9 @@ public class Annonce {
 	@Column
 	private Duration dureeTrajet;
 	
+	@Column
+	@JsonProperty(access=Access.READ_ONLY)
+	private Integer nbPlacesRestantes;
 	
 	@Column
 	private Distance distance;
@@ -62,6 +65,9 @@ public class Annonce {
 			return nbPlaces;
 		}
 		return nbPlaces - passagers.size();
+	}
+	public void setNbPlacesRestantes() {
+		nbPlacesRestantes = getNbPlacesRestantes();
 	}
 	
 	public Integer getId() {
