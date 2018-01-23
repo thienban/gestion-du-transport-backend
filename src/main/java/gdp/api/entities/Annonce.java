@@ -20,9 +20,9 @@ import com.google.maps.model.Duration;
 
 @Entity
 public class Annonce {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="ID")
 	private Integer id;
 
 	@ManyToOne
@@ -40,11 +40,11 @@ public class Annonce {
 	@Enumerated
 	private StatusCovoit status;
 
-	@ManyToOne
-	private Adresse adresseDepart;
+	@Column
+	private String adresseDepart;
 
-	@ManyToOne
-	private Adresse adresseArrive;
+	@Column
+	private String adresseArrive;
 
 	@Column
 	private Duration dureeTrajet;
@@ -62,14 +62,6 @@ public class Annonce {
 			return nbPlaces;
 		}
 		return nbPlaces - passagers.size();
-	}
-	
-	public String getAdresseDepartString() {
-		return adresseDepart.toString();
-	}
-	
-	public String getAdresseArriveString() {
-		return adresseArrive.toString();
 	}
 	
 	public Integer getId() {
@@ -120,22 +112,6 @@ public class Annonce {
 		this.status = status;
 	}
 
-	public Adresse getAdresseDepart() {
-		return adresseDepart;
-	}
-
-	public void setAdresseDepart(Adresse adresseDepart) {
-		this.adresseDepart = adresseDepart;
-	}
-
-	public Adresse getAdresseArrive() {
-		return adresseArrive;
-	}
-
-	public void setAdresseArrive(Adresse adresseArrive) {
-		this.adresseArrive = adresseArrive;
-	}
-
 	public Duration getDureeTrajet() {
 		return dureeTrajet;
 	}
@@ -158,5 +134,21 @@ public class Annonce {
 
 	public void setPassagers(List<Collaborateur> passagers) {
 		this.passagers = passagers;
+	}
+
+	public String getAdresseDepart() {
+		return adresseDepart;
+	}
+
+	public void setAdresseDepart(String adresseDepart) {
+		this.adresseDepart = adresseDepart;
+	}
+
+	public String getAdresseArrive() {
+		return adresseArrive;
+	}
+
+	public void setAdresseArrive(String adresseArrive) {
+		this.adresseArrive = adresseArrive;
 	}
 }

@@ -44,7 +44,7 @@ public class GoogleApiService {
 
 	public Annonce populateTrajetInfo(Annonce annonce) {
 		try {
-			TrajetInfo info = getTrajetInfo(annonce.getAdresseDepartString(), annonce.getAdresseArriveString());
+			TrajetInfo info = getTrajetInfo(annonce.getAdresseDepart(), annonce.getAdresseArrive());
 			annonce.setDateArrivee(annonce.getDateDepart().plusSeconds((info.getDuration().inSeconds)));
 			annonce.setDistance(info.getDistance());
 			annonce.setDureeTrajet(info.getDuration());

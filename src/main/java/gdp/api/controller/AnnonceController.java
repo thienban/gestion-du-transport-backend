@@ -35,13 +35,13 @@ public class AnnonceController {
 	 * Crée une annonce pour l'utilisateur courant
 	 */
 	@PostMapping(path = "/creer")
-	public List<Annonce> creerAnnonce(@RequestBody Annonce nouvAnnonce) {
+	public Annonce creerAnnonce(@RequestBody Annonce nouvAnnonce) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		nouvAnnonce.setAuteur(collab);
 		Annonce annonce = googleApiSvc.populateTrajetInfo(nouvAnnonce);
 		annonceRepo.save(annonce);
-		return annonceRepo.findAll();
+		return annonce;
 	}
 
 	/**
