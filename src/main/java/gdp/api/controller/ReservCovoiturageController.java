@@ -20,11 +20,11 @@ import gdp.api.repository.CollaborateurRepository;
 @RestController
 @RequestMapping("reservations")
 public class ReservCovoiturageController {
-
+   
 	@Autowired
 	private AnnonceRepository annonceRepo;
 
-	@Autowired
+	@Autowired   
 	private CollaborateurRepository collabRepo;
 
 	@GetMapping()

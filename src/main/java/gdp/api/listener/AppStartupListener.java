@@ -92,17 +92,8 @@ public class AppStartupListener {
 		Collaborateur auteur = collabRepo.findOne(15);
 		Annonce annonce = new Annonce();
 		annonce.setAuteur(auteur);
-		annonce.setDateDepart(LocalDateTime.now());
-
-		
-		Adresse adresseDepart = new Adresse(1, "rue de la paix", "Paris", 75018);
-		adresseRepo.save(adresseDepart);
-		
-		Adresse adresseArrivee = new Adresse(1, "rue de la soif", "Rennes", 44000);
-		adresseRepo.save(adresseArrivee);
-		
+		annonce.setDateDepart(LocalDateTime.now().plusDays(15));
 		annonce.setVehicule(v1);
-
 		annonce.setAdresseDepart("3 rue de la paix Paris 75018");
 		annonce.setAdresseArrive("3 rue de la soif Rennes 44000");
 
@@ -120,20 +111,15 @@ public class AppStartupListener {
 
 		LOGGER.info("Reservations ajoutées");
 		
-		for (int i = 1; i<40 ; i++) {
+		for (int i = 1; i<15 ; i++) {
 			
 			Collaborateur auteur2 = collabRepo.findOne(15);
 			Annonce annonce2 = new Annonce();
 			annonce2.setAuteur(auteur2);
-			
 			LocalDateTime dateHisto1 = LocalDateTime.of(2003, 01, 01, 12, 1, 2);
 			annonce2.setDateDepart(dateHisto1);
-			
 			annonce2.setAdresseDepart(i+" rue de la paix Paris 75018");
-			
 			annonce2.setVehicule(v1);
-			Adresse adresseArrivee2 = new Adresse(i, "rue de la soif", "Rennes", 44000);
-			adresseRepo.save(adresseArrivee2);
 			annonce2.setAdresseArrive(i+" rue de la soif Rennes 44000");
 			
 			annonceRepo.save(annonce2);

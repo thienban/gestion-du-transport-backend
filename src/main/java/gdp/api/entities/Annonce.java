@@ -25,7 +25,7 @@ import com.google.maps.model.Duration;
 public class Annonce {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Integer id;
 
 	@ManyToOne
