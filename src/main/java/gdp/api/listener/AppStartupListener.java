@@ -13,11 +13,17 @@ import org.springframework.stereotype.Component;
 
 import gdp.api.entities.Adresse;
 import gdp.api.entities.Annonce;
+import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
+import gdp.api.entities.Marque;
 import gdp.api.entities.Role;
+import gdp.api.entities.StatusVehicule;
+import gdp.api.entities.VehiculeCovoit;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
+import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.repository.MarqueRepository;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
@@ -35,7 +41,13 @@ public class AppStartupListener {
 	AnnonceRepository annonceRepo;
 
 	@Autowired
-	AdresseRepository adresseRepo;;
+	AdresseRepository adresseRepo;
+	
+	@Autowired
+	MarqueRepository marqueRepo;
+	
+	@Autowired 
+	CategorieRepository categorieRepo;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void initDatabase() {
@@ -58,11 +70,27 @@ public class AppStartupListener {
 	private void creerAnnonce() {
 		
 		// Annonce 1
+		Marque m1 = new Marque();
+		m1.setLibelle("Citroën");
+		marqueRepo.save(m1);
+		
+		Categorie cat1 = new Categorie();
+		cat1.setLibelle("Compactes");
+		categorieRepo.save(cat1);
+		
+		VehiculeCovoit v1 = new VehiculeCovoit();
+		v1.setImmatriculation("NI-236-KB");
+		v1.setMarque(m1);
+		v1.setCategorie(cat1);
+		v1.setNbPlaces(4);
+		v1.setPhoto("");
+		v1.setStatusVehicule(StatusVehicule.EN_SERVICE);
+		
 		Collaborateur auteur = collabRepo.findOne(15);
 		Annonce annonce = new Annonce();
 		annonce.setAuteur(auteur);
 		annonce.setDateDepart(LocalDateTime.now());
-		annonce.setNbPlaces(4);
+		annonce.setNbPlacesDispos(4);
 		
 		Adresse adresseDepart = new Adresse(1, "rue de la paix", "Paris", 75018);
 		adresseRepo.save(adresseDepart);
@@ -71,6 +99,8 @@ public class AppStartupListener {
 		Adresse adresseArrivee = new Adresse(1, "rue de la soif", "Rennes", 44000);
 		adresseRepo.save(adresseArrivee);
 		annonce.setAdresseArrive(adresseArrivee);
+		
+		annonce.setVehicule(v1);
 		
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
@@ -85,7 +115,7 @@ public class AppStartupListener {
 		annonceRepo.save(annonce);
 		LOGGER.info("Reservations ajoutées");
 		
-		for (int i = 2; i<20 ; i++) {
+		for (int i = 2; i<40 ; i++) {
 			
 			Collaborateur auteur2 = collabRepo.findOne(15);
 			Annonce annonce2 = new Annonce();
@@ -93,7 +123,7 @@ public class AppStartupListener {
 			
 			LocalDateTime dateHisto1 = LocalDateTime.of(2003, 01, 01, 12, 1, 2);
 			annonce2.setDateDepart(dateHisto1);
-			annonce2.setNbPlaces(4);
+			annonce2.setNbPlacesDispos(4);
 			
 			Adresse adresseDepart2 = new Adresse(i, "rue de la paix", "Paris", 75018);
 			adresseRepo.save(adresseDepart2);

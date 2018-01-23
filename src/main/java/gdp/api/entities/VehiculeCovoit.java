@@ -1,21 +1,12 @@
 package gdp.api.entities;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="VEHICULE")
-public class Vehicule {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+@Embeddable
+public class VehiculeCovoit {
 	
 	@Column(name="IMMATRICULATION")
 	private String immatriculation;
@@ -27,7 +18,7 @@ public class Vehicule {
 	private String photo;
 	
 	@Column(name="STATUS")
-	private StatusVehicule status;
+	private StatusVehicule statusVehicule;
 	
 	@ManyToOne()
 	@JoinColumn(name="ID_CATEGORIE")
@@ -37,16 +28,8 @@ public class Vehicule {
 	@JoinColumn(name="ID_MARQUE")
 	private Marque marque;
 
-	public Vehicule() {
+	public VehiculeCovoit() {
 		
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getImmatriculation() {
@@ -73,12 +56,12 @@ public class Vehicule {
 		this.photo = photo;
 	}
 
-	public StatusVehicule getStatus() {
-		return status;
+	public StatusVehicule getStatusVehicule() {
+		return statusVehicule;
 	}
 
-	public void setStatus(StatusVehicule status) {
-		this.status = status;
+	public void setStatusVehicule(StatusVehicule status) {
+		this.statusVehicule = status;
 	}
 
 	public Categorie getCategorie() {

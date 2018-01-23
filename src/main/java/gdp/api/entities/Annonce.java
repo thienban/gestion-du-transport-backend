@@ -33,10 +33,10 @@ public class Annonce {
 	private LocalDateTime dateArrivee;
 
 	@Column
-	private Integer nbPlaces;
+	private Integer nbPlacesDispos;
 
 	@Enumerated
-	private StatusCovoit status;
+	private StatusCovoit statusCovoit;
 
 	@ManyToOne
 	private Adresse adresseDepart;
@@ -49,6 +49,9 @@ public class Annonce {
 
 	@Column
 	private Integer distance;
+	
+	@Embedded
+	private VehiculeCovoit vehicule;
 
 	@ManyToMany
 	@JoinTable(name = "RESERVATIONS_COVOIT", joinColumns = @JoinColumn(name = "ANNONCE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PASSAGERS_ID", referencedColumnName = "ID"))
@@ -56,9 +59,9 @@ public class Annonce {
 
 	public Integer getNbPlacesRestantes() {
 		if (passagers == null) {
-			return nbPlaces;
+			return nbPlacesDispos;
 		}
-		return nbPlaces - passagers.size();
+		return nbPlacesDispos - passagers.size();
 	}
 
 	public Integer getId() {
@@ -93,20 +96,20 @@ public class Annonce {
 		this.dateArrivee = dateArrivee;
 	}
 
-	public Integer getNbPlaces() {
-		return nbPlaces;
+	public Integer getNbPlacesDispos() {
+		return nbPlacesDispos;
 	}
 
-	public void setNbPlaces(Integer nbPlaces) {
-		this.nbPlaces = nbPlaces;
+	public void setNbPlacesDispos(Integer nbPlaces) {
+		this.nbPlacesDispos = nbPlaces;
 	}
 
-	public StatusCovoit getStatus() {
-		return status;
+	public StatusCovoit getStatusCovoit() {
+		return statusCovoit;
 	}
 
-	public void setStatus(StatusCovoit status) {
-		this.status = status;
+	public void setStatusCovoit(StatusCovoit status) {
+		this.statusCovoit = status;
 	}
 
 	public Adresse getAdresseDepart() {
@@ -147,5 +150,13 @@ public class Annonce {
 
 	public void setPassagers(List<Collaborateur> passagers) {
 		this.passagers = passagers;
+	}
+
+	public VehiculeCovoit getVehicule() {
+		return vehicule;
+	}
+
+	public void setVehicule(VehiculeCovoit vehicule) {
+		this.vehicule = vehicule;
 	}
 }
