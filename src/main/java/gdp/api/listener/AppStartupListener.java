@@ -14,11 +14,17 @@ import org.springframework.stereotype.Component;
 
 import gdp.api.entities.Adresse;
 import gdp.api.entities.Annonce;
+import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
+import gdp.api.entities.Marque;
 import gdp.api.entities.Role;
+import gdp.api.entities.StatusVehicule;
+import gdp.api.entities.VehiculeCovoit;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
+import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.repository.MarqueRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
@@ -38,6 +44,12 @@ public class AppStartupListener {
 
 	@Autowired
 	AdresseRepository adresseRepo;
+	
+	@Autowired
+	MarqueRepository marqueRepo;
+	
+	@Autowired 
+	CategorieRepository categorieRepo;
 
 	@Autowired
 	GoogleApiService googleApiSvc;
@@ -61,13 +73,30 @@ public class AppStartupListener {
 	}
 
 	private void creerAnnonce() {
+		
+		// Annonce 1
+		Marque m1 = new Marque();
+		m1.setLibelle("Citroën");
+		marqueRepo.save(m1);
+		
+		Categorie cat1 = new Categorie();
+		cat1.setLibelle("Compactes");
+		categorieRepo.save(cat1);
+		
+		VehiculeCovoit v1 = new VehiculeCovoit();
+		v1.setImmatriculation("NI-236-KB");
+		v1.setMarque("citroën");
+		v1.setModele("C5");
+		v1.setNbPlaces(4);
+		
 		Collaborateur auteur = collabRepo.findOne(15);
 		Annonce annonce = new Annonce();
 		annonce.setAuteur(auteur);
-		annonce.setDateDepart(LocalDateTime.now());
-		annonce.setNbPlaces(4);
+		annonce.setDateDepart(LocalDateTime.now().plusDays(15));
+		annonce.setVehicule(v1);
 		annonce.setAdresseDepart("3 rue de la paix Paris 75018");
 		annonce.setAdresseArrive("3 rue de la soif Rennes 44000");
+
 		annonceRepo.save(annonce);
 		LOGGER.info("Annonce sauvée");
 
@@ -81,6 +110,32 @@ public class AppStartupListener {
 		annonceRepo.save(annonce);
 
 		LOGGER.info("Reservations ajoutées");
+		
+		for (int i = 1; i<15 ; i++) {
+			
+			Collaborateur auteur2 = collabRepo.findOne(15);
+			Annonce annonce2 = new Annonce();
+			annonce2.setAuteur(auteur2);
+			LocalDateTime dateHisto1 = LocalDateTime.of(2003, 01, 01, 12, 1, 2);
+			annonce2.setDateDepart(dateHisto1);
+			annonce2.setAdresseDepart(i+" rue de la paix Paris 75018");
+			annonce2.setVehicule(v1);
+			annonce2.setAdresseArrive(i+" rue de la soif Rennes 44000");
+			
+			annonceRepo.save(annonce2);
+			LOGGER.info("Annonce sauvée");
+			
+			
+			LOGGER.info("Ajout de passagers ...");
 
+			List<Collaborateur> passagers2 = annonce2.getPassagers();
+			passagers2.add(collabRepo.findOne(13));
+			passagers2.add(collabRepo.findOne(12));
+			annonce2.setPassagers(passagers2);
+			googleApiSvc.populateTrajetInfo(annonce2);
+			annonceRepo.save(annonce2);
+			LOGGER.info("Reservations ajoutées");
+		}
+	
 	}
 }

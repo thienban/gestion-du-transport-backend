@@ -5,8 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="ADRESSE")
 public class Adresse {
 
 	@Id
@@ -42,9 +44,6 @@ public class Adresse {
 		this.codePostal = codePostal;
 	}
 	
-	public String toString() {
-		return numero +" "+ rue+ " " + " " + ville + " " + codePostal;
-	}
 
 	public Integer getId() {
 		return id;

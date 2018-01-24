@@ -5,24 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.google.maps.model.Distance;
 import com.google.maps.model.Duration;
 
 @Entity
 public class Annonce {
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Integer id;
 
 	@ManyToOne
@@ -34,21 +37,25 @@ public class Annonce {
 	@Column
 	private LocalDateTime dateArrivee;
 
-	@Column
-	private Integer nbPlaces;
 
 	@Enumerated
-	private StatusCovoit status;
+	private StatusCovoit statusCovoit;
 
 	@Column
 	private String adresseDepart;
 
 	@Column
 	private String adresseArrive;
-
+	
+	@Embedded
+	private VehiculeCovoit vehicule;
+	
 	@Column
 	private Duration dureeTrajet;
 	
+	@Column
+	@JsonProperty(access=Access.READ_ONLY)
+	private Integer nbPlacesRestantes;
 	
 	@Column
 	private Distance distance;
@@ -59,9 +66,12 @@ public class Annonce {
 
 	public Integer getNbPlacesRestantes() {
 		if (passagers == null) {
-			return nbPlaces;
+			return vehicule.getNbPlaces();
 		}
-		return nbPlaces - passagers.size();
+		return vehicule.getNbPlaces() - passagers.size();
+	}
+	public void setNbPlacesRestantes() {
+		nbPlacesRestantes = getNbPlacesRestantes();
 	}
 	
 	public Integer getId() {
@@ -96,20 +106,12 @@ public class Annonce {
 		this.dateArrivee = dateArrivee;
 	}
 
-	public Integer getNbPlaces() {
-		return nbPlaces;
+	public StatusCovoit getStatusCovoit() {
+		return statusCovoit;
 	}
 
-	public void setNbPlaces(Integer nbPlaces) {
-		this.nbPlaces = nbPlaces;
-	}
-
-	public StatusCovoit getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusCovoit status) {
-		this.status = status;
+	public void setStatusCovoit(StatusCovoit status) {
+		this.statusCovoit = status;
 	}
 
 	public Duration getDureeTrajet() {
@@ -150,5 +152,13 @@ public class Annonce {
 
 	public void setAdresseArrive(String adresseArrive) {
 		this.adresseArrive = adresseArrive;
+	}
+
+	public VehiculeCovoit getVehicule() {
+		return vehicule;
+	}
+
+	public void setVehicule(VehiculeCovoit vehicule) {
+		this.vehicule = vehicule;
 	}
 }

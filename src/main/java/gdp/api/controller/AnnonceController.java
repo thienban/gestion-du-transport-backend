@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
+import gdp.api.entities.StatusCovoit;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.services.GoogleApiService;
@@ -35,13 +36,15 @@ public class AnnonceController {
 	 * Crée une annonce pour l'utilisateur courant
 	 */
 	@PostMapping(path = "/creer")
-	public Annonce creerAnnonce(@RequestBody Annonce nouvAnnonce) {
+	public List<Annonce> creerAnnonce(@RequestBody Annonce nouvAnnonce) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		nouvAnnonce.setAuteur(collab);
-		Annonce annonce = googleApiSvc.populateTrajetInfo(nouvAnnonce);
-		annonceRepo.save(annonce);
-		return annonce;
+		System.out.println(nouvAnnonce.getAdresseDepart());
+		googleApiSvc.populateTrajetInfo(nouvAnnonce);
+		nouvAnnonce.setStatusCovoit(StatusCovoit.EN_COURS);
+		annonceRepo.save(nouvAnnonce);
+		return findAllAnnonces();
 	}
 
 	/**

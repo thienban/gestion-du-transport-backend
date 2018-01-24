@@ -30,7 +30,8 @@ public class TokenService {
 		String role = auth.getAuthorities().toArray()[0].toString();
 		String token = Jwts.builder().setSubject(((User) auth.getPrincipal()).getUsername())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).claim("role", role)
-				.claim("matricule", matricule).signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).compact();
+				.claim("matricule", matricule).claim("nom", collab.getNom()).claim("prenom", collab.getPrenom())
+				.signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).compact();
 		return token;
 	}
 }
