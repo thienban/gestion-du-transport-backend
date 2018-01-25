@@ -36,6 +36,10 @@ public class VehiculeSociete {
 	@ManyToOne()
 	@JoinColumn(name="ID_MARQUE")
 	private Marque marque;
+	
+	@ManyToOne
+	@JoinColumn(name="ID_MODELE")
+	private Modele modele;
 
 	public VehiculeSociete() {
 		
@@ -96,6 +100,16 @@ public class VehiculeSociete {
 	public void setMarque(Marque marque) {
 		this.marque = marque;
 	}
+
+	public Modele getModele() {
+		return modele;
+	}
+
+	public void setModele(Modele modele) {
+		this.modele = modele;
+	}
+	
+	
 	
 	
 }

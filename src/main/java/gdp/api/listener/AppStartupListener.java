@@ -1,6 +1,7 @@
 package gdp.api.listener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,14 +18,18 @@ import gdp.api.entities.Annonce;
 import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Marque;
+import gdp.api.entities.Modele;
 import gdp.api.entities.Role;
 import gdp.api.entities.StatusVehicule;
 import gdp.api.entities.VehiculeCovoit;
+import gdp.api.entities.VehiculeSociete;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.MarqueRepository;
+import gdp.api.repository.ModeleRepository;
+import gdp.api.repository.VehiculeRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
@@ -48,8 +53,13 @@ public class AppStartupListener {
 	@Autowired
 	MarqueRepository marqueRepo;
 	
+	@Autowired
+	ModeleRepository modeleRepo;
+	
 	@Autowired 
 	CategorieRepository categorieRepo;
+	
+	@Autowired VehiculeRepository vehiculeRepo;
 
 	@Autowired
 	GoogleApiService googleApiSvc;
@@ -69,6 +79,7 @@ public class AppStartupListener {
 		}).toList().subscribe(collabs -> {
 			collabRepo.save(collabs);
 			creerAnnonce();
+			creerVehiculesSociete();
 		});
 	}
 
@@ -79,9 +90,16 @@ public class AppStartupListener {
 		m1.setLibelle("Citroën");
 		marqueRepo.save(m1);
 		
-		Categorie cat1 = new Categorie();
-		cat1.setLibelle("Compactes");
-		categorieRepo.save(cat1);
+		List<Categorie> categories = new ArrayList<Categorie>();
+		categories.add(new Categorie("Micro-urbaines"));
+		categories.add(new Categorie("Mini-citadines"));
+		categories.add(new Categorie("Citadines polyvalentes"));
+		categories.add(new Categorie("Compactes"));
+		categories.add(new Categorie("Berlines taille S"));
+		categories.add(new Categorie("Berlines taille M"));
+		categories.add(new Categorie("Berlines taille L"));
+		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
+		categorieRepo.save(categories);
 		
 		VehiculeCovoit v1 = new VehiculeCovoit();
 		v1.setImmatriculation("NI-236-KB");
@@ -135,7 +153,36 @@ public class AppStartupListener {
 			googleApiSvc.populateTrajetInfo(annonce2);
 			annonceRepo.save(annonce2);
 			LOGGER.info("Reservations ajoutées");
+			
+
 		}
 	
+	}
+	
+	public void creerVehiculesSociete() {
+
+		Marque m2 = new Marque();
+		m2.setLibelle("Peugeot");
+		marqueRepo.save(m2);
+		
+		Modele mod = new Modele();
+		mod.setLibelle("206");
+		modeleRepo.save(mod);
+		
+		for (int i=1; i<=30; i++) {
+			
+			VehiculeSociete vehicule = new VehiculeSociete();
+			vehicule.setImmatriculation("" + (char)(64 + i%26) + (char)(64 + i%26) + String.format("-%03d-", i) + (char)(64 + i%26) + (char)(64 + i%26));
+			vehicule.setMarque(m2);
+			vehicule.setModele(mod);
+			vehicule.setCategorie(categorieRepo.findOne(4));
+			vehicule.setNbPlaces(4);
+			vehicule.setStatus(StatusVehicule.EN_SERVICE);
+			vehicule.setPhoto("http://1.bp.blogspot.com/-eGIZoc5Pqv8/TcLUcaGjSjI/AAAAAAAAGr0/0TvqE1p8wjY/s1600/car%2Bweapon%2Bmod.jpg");
+			
+			vehiculeRepo.save(vehicule);
+		
+		}
+		
 	}
 }
