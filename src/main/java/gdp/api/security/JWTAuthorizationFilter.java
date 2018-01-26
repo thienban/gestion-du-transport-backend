@@ -15,14 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import io.jsonwebtoken.Jwts;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+	private UserDetailsServiceImpl myUserDetailSvc;
+
+	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, UserDetailsServiceImpl myUserDetailSvc) {
 		super(authenticationManager);
+		this.myUserDetailSvc = myUserDetailSvc;
 	}
 
 	@Override
@@ -45,11 +49,17 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 		String token = request.getHeader(HEADER_STRING);
 		if (token != null) {
 			// parse the token.
-			String user = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-					.getBody().getSubject();
-
-			if (user != null) {
-				return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+			String userEmail = Jwts.parser().setSigningKey(SECRET.getBytes())
+					.parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody().getSubject();
+			if (userEmail != null) {
+				// Verify if the user is known by our services. If he is not in our db, we will
+				// fetch him from the remote db.
+				boolean userInDb = myUserDetailSvc.verifyUserEmail(userEmail);
+				if (userInDb) {
+					return new UsernamePasswordAuthenticationToken(userEmail, null, new ArrayList<>());
+				} else {
+					return null;
+				}
 			}
 			return null;
 		}

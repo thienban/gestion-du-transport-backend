@@ -55,7 +55,7 @@ public class ReservCovoiturageController {
 		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findByDateDepartGreaterThanAndAuteurIsNot(LocalDateTime.now(), collab).stream()
 				.filter(annonce -> {
-					return !annonce.getPassagers().contains(collab);
+					return !annonce.getPassagers().contains(collab) && annonce.getVehicule().getNbPlaces() > annonce.getPassagers().size();
 				}).collect(Collectors.toList());
 	}
 

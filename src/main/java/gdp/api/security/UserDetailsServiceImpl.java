@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
+
 	@Autowired
 	private CollaborateurRepository collaborateurRepository;
 
@@ -52,5 +52,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		return user;
 
+	}
+
+	public boolean verifyUserEmail(String email) {
+		Collaborateur collabExist = collaborateurRepository.findByEmail(email);
+		if (collabExist != null) {
+			return true;
+		} else {
+			List<Collaborateur> newCollab = http.getCollabService().getCollabInfoByEmail(email).toBlocking().first();
+			if (newCollab.isEmpty()) {
+				return false;
+			} else {
+				collaborateurRepository.save(newCollab.get(0));
+				return true;
+			}
+		}
 	}
 }
