@@ -7,4 +7,7 @@ import gdp.api.entities.Modele;
 
 public interface ModeleRepository extends JpaRepository<Modele, Integer>{
 
+	public Modele findByLibelle(String libelle);
+
+	
 }
