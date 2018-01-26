@@ -40,6 +40,12 @@ public class Collaborateur {
 
 	@Column
 	private String photo;
+	
+	@Column
+	private String permis;
+	
+	@Column
+	private Integer telephone;
 
 	public Collaborateur() {
 		this.role = Role.COLLABORATEUR;
@@ -107,6 +113,22 @@ public class Collaborateur {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPermis() {
+		return permis;
+	}
+
+	public void setPermis(String permis) {
+		this.permis = permis;
+	}
+
+	public Integer getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(Integer telephone) {
+		this.telephone = telephone;
 	}
 
 }
