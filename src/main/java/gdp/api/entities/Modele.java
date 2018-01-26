@@ -8,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="CATEGORIE")
-public class Categorie {
-	
+@Table(name="MODELE")
+public class Modele {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -18,12 +18,8 @@ public class Categorie {
 	@Column(name="LIBELLE")
 	private String libelle;
 
-	public Categorie() {
+	public Modele() {
 		
-	}
-	
-	public Categorie(String libelle) {
-		this.libelle = libelle;
 	}
 
 	public Integer getId() {
@@ -41,5 +37,5 @@ public class Categorie {
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
-
+	
 }

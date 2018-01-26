@@ -2,6 +2,7 @@ package gdp.api.listener;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,13 +18,18 @@ import gdp.api.entities.Annonce;
 import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Marque;
+import gdp.api.entities.Modele;
 import gdp.api.entities.Role;
+import gdp.api.entities.StatusVehicule;
 import gdp.api.entities.VehiculeCovoit;
+import gdp.api.entities.VehiculeSociete;
 import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.MarqueRepository;
+import gdp.api.repository.ModeleRepository;
+import gdp.api.repository.VehiculeRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
@@ -48,7 +54,13 @@ public class AppStartupListener {
 	MarqueRepository marqueRepo;
 
 	@Autowired
+	ModeleRepository modeleRepo;
+
+	@Autowired
 	CategorieRepository categorieRepo;
+
+	@Autowired
+	VehiculeRepository vehiculeRepo;
 
 	@Autowired
 	GoogleApiService googleApiSvc;
@@ -68,20 +80,11 @@ public class AppStartupListener {
 		}).toList().subscribe(collabs -> {
 			collabRepo.save(collabs);
 			creerAnnonce();
+			creerVehiculesSociete();
 		});
 	}
 
 	private void creerAnnonce() {
-
-		// Annonce 1
-		Marque m1 = new Marque();
-		m1.setLibelle("Citroën");
-		marqueRepo.save(m1);
-
-		Categorie cat1 = new Categorie();
-		cat1.setLibelle("Compactes");
-		categorieRepo.save(cat1);
-
 		VehiculeCovoit v1 = new VehiculeCovoit();
 		v1.setImmatriculation("NI-236-KB");
 		v1.setMarque("citroën");
@@ -136,26 +139,49 @@ public class AppStartupListener {
 			annonceRepo.save(annonce);
 
 		}
+
+		LOGGER.info("Reservations ajoutées");
 		LOGGER.info("Annonces sauvées");
-		/*
-		 * for (int i = 1; i < 7; i++) {
-		 * 
-		 * Collaborateur auteur2 = collabRepo.findOne(15); Annonce annonce2 = new
-		 * Annonce(); annonce2.setAuteur(auteur2); LocalDateTime dateHisto1 =
-		 * LocalDateTime.of(2003, 01, 01, 12, 1, 2); annonce2.setDateDepart(dateHisto1);
-		 * annonce2.setAdresseDepart(i + " rue de la paix Paris 75018");
-		 * annonce2.setVehicule(v1); annonce2.setAdresseArrive(i +
-		 * " rue de la soif Rennes 44000");
-		 * 
-		 * annonceRepo.save(annonce2); LOGGER.info("Annonce sauvée");
-		 * 
-		 * LOGGER.info("Ajout de passagers ...");
-		 * 
-		 * List<Collaborateur> passagers2 = annonce2.getPassagers();
-		 * passagers2.add(collabRepo.findOne(13));
-		 * passagers2.add(collabRepo.findOne(12)); annonce2.setPassagers(passagers2);
-		 * googleApiSvc.populateTrajetInfo(annonce2); annonceRepo.save(annonce2);
-		 * LOGGER.info("Reservations ajoutées"); }
-		 */
+
+	}
+
+	public void creerVehiculesSociete() {
+		List<Categorie> categories = new ArrayList<Categorie>();
+		categories.add(new Categorie("Micro-urbaines"));
+		categories.add(new Categorie("Mini-citadines"));
+		categories.add(new Categorie("Citadines polyvalentes"));
+		categories.add(new Categorie("Compactes"));
+		categories.add(new Categorie("Berlines taille S"));
+		categories.add(new Categorie("Berlines taille M"));
+		categories.add(new Categorie("Berlines taille L"));
+		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
+		categorieRepo.save(categories);
+		
+		
+		Marque m2 = new Marque();
+		m2.setLibelle("Peugeot");
+		marqueRepo.save(m2);
+
+		Modele mod = new Modele();
+		mod.setLibelle("206");
+		modeleRepo.save(mod);
+
+		for (int i = 1; i <= 15; i++) {
+
+			VehiculeSociete vehicule = new VehiculeSociete();
+			vehicule.setImmatriculation("" + (char) (64 + (i % 26 + 1)) + (char) (64 + (i % 26 + 1))
+					+ String.format("-%03d-", i) + (char) (64 + (i % 26 + 1)) + (char) (64 + (i % 26 + 1)));
+			vehicule.setMarque(m2);
+			vehicule.setModele(mod);
+			vehicule.setCategorie(categorieRepo.findOne(4));
+			vehicule.setNbPlaces(4);
+			vehicule.setStatus(StatusVehicule.EN_SERVICE);
+			vehicule.setPhoto(
+					"http://1.bp.blogspot.com/-eGIZoc5Pqv8/TcLUcaGjSjI/AAAAAAAAGr0/0TvqE1p8wjY/s1600/car%2Bweapon%2Bmod.jpg");
+
+			vehiculeRepo.save(vehicule);
+
+		}
+
 	}
 }
