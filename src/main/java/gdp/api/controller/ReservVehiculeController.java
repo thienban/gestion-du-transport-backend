@@ -1,7 +1,9 @@
 package gdp.api.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,31 +39,42 @@ public class ReservVehiculeController {
 	public List<ReserverVehicule> ListVehicule() {
 		return reserverRepo.findAll();
 	}
-	
 	/**
-	 * crée une réservation : ajoute l'utilisateur courant dans la liste des
-	 * passagers de l'annonce dont l'id est passé dans le corps de la requete
-	 * ajoute le vehicule
-	 * alerter les chauffeurs
+	 * retourne les reservations dont l'utilisateur courant est passager
+	 */
+	@GetMapping(path = "/me")
+	public List<ReserverVehicule> mesReservations() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
+		return reserverRepo.findAll().stream().filter(reservation -> {
+			return reservation.getPassager().getMatricule().equals(collab.getMatricule());
+		}).collect(Collectors.toList());
+	}
+	/**
+	 * crée une réservation : récupérer les données de ReserverVehiculeFront 
+	 * puis sauvegarder la nouvelle réservation
 	 */
 	@PostMapping(path = "/creer")
 	public List<ReserverVehicule> creerReservations(@RequestBody ReserverVehiculeFront reservation) {
-		Integer reserver_id = reservation.getId_vehicule()
+		Integer vehicule_id = reservation.getId_vehicule();
+		LocalDateTime dateReservation = reservation.getDateReservation();
+		LocalDateTime dateRetour = reservation.getDateRetour();
+		Boolean optionChauffeur = reservation.isOptionChauffeur();
+		
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		
 		Collaborateur passager = collabRepo.findByEmail(email);
-		VehiculeSociete vehicule = vehiculeRepo.findOne(reserver_id);
-		ReserverVehicule reserver = reserverRepo.findOne(reserver_id);
+		VehiculeSociete vehicule = vehiculeRepo.findOne(vehicule_id);
 		
-		if (!reserver.isOptionChauffeur()) {
-			
-			reserver.setPassager(passager);
-			reserver.setVehicule(vehicule);
-			reserver.setDisponible(false);
-			
-			reserverRepo.save(reserver);
-			//ajouter une voiture, passager, creer la reservation
-		}
+		ReserverVehicule reserver = new ReserverVehicule();
+		reserver.setPassager(passager);
+		reserver.setVehicule(vehicule);
+		reserver.setDateReservation(dateReservation);
+		reserver.setDateRetour(dateRetour);
+		reserver.setDisponible(false);
+		reserver.setOptionChauffeur(optionChauffeur);
+
+		reserverRepo.save(reserver);
 		return mesReservations();
 	}
 
