@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import gdp.api.repository.ModeleRepository;
 import gdp.api.repository.VehiculeRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
+import gdp.api.services.MailJetService;
 import rx.Observable;
 
 @Component
@@ -64,9 +66,12 @@ public class AppStartupListener {
 
 	@Autowired
 	GoogleApiService googleApiSvc;
+	
+	@Autowired
+	MailJetService mailJetSvc;
 
 	@EventListener(ApplicationReadyEvent.class)
-	public void initDatabase() {
+	public void initDatabase() throws JSONException {
 		LOGGER.info("DataBase Initialisation");
 		AtomicInteger counter = new AtomicInteger();
 		http.getCollabService().getCollaborateurs(30).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
@@ -82,6 +87,7 @@ public class AppStartupListener {
 			creerAnnonce();
 			creerVehiculesSociete();
 		});
+		mailJetSvc.sendCancellationEmailTo("alex.behaghel@gmail.com");
 	}
 
 	private void creerAnnonce() {
@@ -156,8 +162,7 @@ public class AppStartupListener {
 		categories.add(new Categorie("Berlines taille L"));
 		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
 		categorieRepo.save(categories);
-		
-		
+
 		Marque m2 = new Marque();
 		m2.setLibelle("Peugeot");
 		marqueRepo.save(m2);
