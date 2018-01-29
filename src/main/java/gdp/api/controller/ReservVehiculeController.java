@@ -1,7 +1,9 @@
 package gdp.api.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,24 +39,29 @@ public class ReservVehiculeController {
 	}
 	
 	/**
-	 * crée une réservation : ajoute l'utilisateur courant dans la liste des
-	 * passagers de l'annonce dont l'id est passé dans le corps de la requete
-	 * ajoute le vehicule
-	 * alerter les chauffeurs
+	 * retourne les reservations véhicule dont l'utilisateur courant est passager
 	 */
-	@PostMapping(path = "/creer")
-	public List<ReserverVehicule> creerReservations(@RequestBody Map<String, Integer> body) {
-		Integer reserver_id = body.get("ReserverVehicule_id");
+	@GetMapping(path = "/me")
+	public List<ReserverVehicule> mesReservations() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
-		Annonce annonce = annonceRepo.findOne(annonce_id);
-		if (annonce.getNbPlacesRestantes() > 0) {
-			List<Collaborateur> passagers = annonce.getPassagers();
-			passagers.add(collab);
-			annonce.setPassagers(passagers);
-			annonceRepo.save(annonce);
-		}
-		return mesReservations();
+		return reserverRepo.findAll().stream().filter(reservation -> {
+			return reservation.getPassager() == collab;
+		}).collect(Collectors.toList());
+	}
+	
+	/**
+	 * retourne les annonces sur lesquelles l'utilisateur courant peut effectuer une
+	 * réservation
+	 */
+	@GetMapping(path = "/available")
+	public List<ReserverVehicule> reservationsDisponibles() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
+		return reserverRepo.findByDateReservationGreaterThanAndPassagerIsNot(LocalDateTime.now(), collab).stream()
+				.filter(reservation -> {
+					return !(reservation.getPassager() == collab && reservation.isDisponible() == false);
+				}).collect(Collectors.toList());
 	}
 
 }
