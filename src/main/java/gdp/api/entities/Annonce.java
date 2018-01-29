@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,20 +32,20 @@ public class Annonce {
 	@ManyToOne
 	private Collaborateur auteur;
 
-	@Column
+	@Column(nullable=false)
 	private LocalDateTime dateDepart;
 
-	@Column
+	@Column(nullable=false)
 	private LocalDateTime dateArrivee;
 
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private StatusCovoit statusCovoit;
 
-	@Column
+	@Column(nullable=false)
 	private String adresseDepart;
 
-	@Column
+	@Column(nullable=false)
 	private String adresseArrive;
 	
 	@Embedded
@@ -70,6 +71,7 @@ public class Annonce {
 		}
 		return vehicule.getNbPlaces() - passagers.size();
 	}
+	
 	public void setNbPlacesRestantes() {
 		nbPlacesRestantes = getNbPlacesRestantes();
 	}

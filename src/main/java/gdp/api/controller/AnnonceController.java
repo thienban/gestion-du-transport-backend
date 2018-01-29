@@ -37,14 +37,14 @@ public class AnnonceController {
 	 */
 	@PostMapping(path = "/creer")
 	public List<Annonce> creerAnnonce(@RequestBody Annonce nouvAnnonce) {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		String email = GetUserEmail();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		nouvAnnonce.setAuteur(collab);
 		System.out.println(nouvAnnonce.getAdresseDepart());
 		googleApiSvc.populateTrajetInfo(nouvAnnonce);
 		nouvAnnonce.setStatusCovoit(StatusCovoit.EN_COURS);
 		annonceRepo.save(nouvAnnonce);
-		return findAllAnnonces();
+		return getUserAnnonces();
 	}
 
 	/**
@@ -52,9 +52,13 @@ public class AnnonceController {
 	 */
 	@GetMapping(path = "/me")
 	public List<Annonce> getUserAnnonces() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		String email = GetUserEmail();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findByAuteur(collab);
+	}
+
+	public String GetUserEmail() {
+		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
 
 }
