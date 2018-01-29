@@ -111,8 +111,10 @@ public class AppStartupListener {
 			annonce.setAuteur(auteur);
 			if (i <= 7) {
 				annonce.setDateDepart(LocalDateTime.now().plusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().plusDays(i+10));
 			} else {
 				annonce.setDateDepart(LocalDateTime.now().minusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().minusDays(i+10));
 			}
 
 			annonce.setVehicule(v1);
@@ -195,10 +197,10 @@ public class AppStartupListener {
 	public void creerReservationVehicule() {
 		
 		for (int i = 1; i <= 15; i++) {
-		
+			
 			ReserverVehicule reserV = new ReserverVehicule();
-			reserV.setChauffeur(collabRepo.findOne(i));
-			reserV.setPassager(collabRepo.findOne(i));
+			reserV.setChauffeur(collabRepo.findOne(1));
+			reserV.setPassager(collabRepo.findOne(1));
 			reserV.setOptionChauffeur(true);
 			reserV.setDateReservation(LocalDateTime.of(2018, i, 14, 9, i));
 			reserV.setDateRetour(LocalDateTime.of(2018, i, 14, 17, i));
