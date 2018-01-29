@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,19 +17,19 @@ public class ReserverVehicule {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column
+	@ManyToOne
 	private Collaborateur passager;
 	
-	@Column
+	@ManyToOne
 	private Collaborateur chauffeur;
 	
-	@Column
+	@ManyToOne
 	private VehiculeSociete vehicule;
 	
-	@Column
+	@Column(name="OPTION_CHAUFFEUR")
 	private boolean optionChauffeur;
 	
-	@Column
+	@Column(name="DISPONIBLE")
 	private boolean disponible;
 	
 	@Column(nullable=false)
@@ -37,6 +38,86 @@ public class ReserverVehicule {
 
 	@Column(nullable=false)
 	private LocalDateTime dateRetour;
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public Collaborateur getPassager() {
+		return passager;
+	}
+
+
+	public void setPassager(Collaborateur passager) {
+		this.passager = passager;
+	}
+
+
+	public Collaborateur getChauffeur() {
+		return chauffeur;
+	}
+
+
+	public void setChauffeur(Collaborateur chauffeur) {
+		this.chauffeur = chauffeur;
+	}
+
+
+	public VehiculeSociete getVehicule() {
+		return vehicule;
+	}
+
+
+	public void setVehicule(VehiculeSociete vehicule) {
+		this.vehicule = vehicule;
+	}
+
+
+	public boolean isOptionChauffeur() {
+		return optionChauffeur;
+	}
+
+
+	public void setOptionChauffeur(boolean optionChauffeur) {
+		this.optionChauffeur = optionChauffeur;
+	}
+
+
+	public boolean isDisponible() {
+		return disponible;
+	}
+
+
+	public void setDisponible(boolean disponible) {
+		this.disponible = disponible;
+	}
+
+
+	public LocalDateTime getDateReservation() {
+		return dateReservation;
+	}
+
+
+	public void setDateReservation(LocalDateTime dateReservation) {
+		this.dateReservation = dateReservation;
+	}
+
+
+	public LocalDateTime getDateRetour() {
+		return dateRetour;
+	}
+
+
+	public void setDateRetour(LocalDateTime dateRetour) {
+		this.dateRetour = dateRetour;
+	}
 	
 
 }
