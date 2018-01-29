@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
 	@Autowired
 	private CollaborateurRepository collaborateurRepository;
 
@@ -37,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			mail = collabExist.getEmail();
 			role = collabExist.getRole();
 		} else {
-			List<Collaborateur> newCollab = http.getService().getCollabInfoByEmail(email).toBlocking().first();
+			List<Collaborateur> newCollab = http.getCollabService().getCollabInfoByEmail(email).toBlocking().first();
 
 			if (newCollab.isEmpty()) {
 				throw new UsernameNotFoundException(email);
@@ -47,6 +48,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			mail = newCollab.get(0).getEmail();
 			role = newCollab.get(0).getRole();
 		}
-		return new User(mail, password, Arrays.asList(role.getAuthority()));
+		User user = new User(mail, password, Arrays.asList(role.getAuthority()));
+
+		return user;
+
+	}
+
+	public boolean verifyUserEmail(String email) {
+		Collaborateur collabExist = collaborateurRepository.findByEmail(email);
+		if (collabExist != null) {
+			return true;
+		} else {
+			List<Collaborateur> newCollab = http.getCollabService().getCollabInfoByEmail(email).toBlocking().first();
+			if (newCollab.isEmpty()) {
+				return false;
+			} else {
+				collaborateurRepository.save(newCollab.get(0));
+				return true;
+			}
+		}
 	}
 }
+

@@ -14,18 +14,19 @@ public class HttpService {
 
 	private CollabService collabSvc;
 
-	HttpService() {
+	private OkHttpClient.Builder httpClient;
 
+	HttpService() {
+		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+		// set your desired log level
+		logging.setLevel(Level.BASIC);
+		httpClient = new OkHttpClient.Builder();
+		httpClient.addInterceptor(logging);
 	}
 
-	public CollabService getService() {
+	public CollabService getCollabService() {
 		if (collabSvc == null) {
-			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-			// set your desired log level
-			logging.setLevel(Level.BODY);
-			OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-			httpClient.addInterceptor(logging);
-			Retrofit retrofit = new Retrofit.Builder().baseUrl("https://collab-json-api.herokuapp.com/")
+			Retrofit retrofit = new Retrofit.Builder().baseUrl("https://collab-json-api.herokuapp.com")
 					.addConverterFactory(JacksonConverterFactory.create())
 					.addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(httpClient.build()).build();
 			collabSvc = retrofit.create(CollabService.class);
@@ -33,3 +34,4 @@ public class HttpService {
 		return collabSvc;
 	}
 }
+
