@@ -1,6 +1,5 @@
 package gdp.api;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +16,7 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-	
-	@Value("${google.api.key}") String googleApiKey;
-	
+		
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {
@@ -42,7 +39,7 @@ public class Application {
 	@Bean
 	public GeoApiContext geoApiContext() {		
 		GeoApiContext context = new GeoApiContext.Builder()
-			    .apiKey(googleApiKey)
+			    .apiKey(System.getenv("GOOGLE_MAPS_API_KEY"))
 			    .build();
 		return context;
 	}

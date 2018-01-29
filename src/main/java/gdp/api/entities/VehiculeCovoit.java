@@ -2,8 +2,7 @@ package gdp.api.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
 
 @Embeddable
 public class VehiculeCovoit {

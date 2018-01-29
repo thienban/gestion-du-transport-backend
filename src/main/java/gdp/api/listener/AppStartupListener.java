@@ -24,7 +24,6 @@ import gdp.api.entities.Role;
 import gdp.api.entities.StatusVehicule;
 import gdp.api.entities.VehiculeCovoit;
 import gdp.api.entities.VehiculeSociete;
-import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
@@ -50,9 +49,6 @@ public class AppStartupListener {
 	AnnonceRepository annonceRepo;
 
 	@Autowired
-	AdresseRepository adresseRepo;
-
-	@Autowired
 	MarqueRepository marqueRepo;
 
 	@Autowired
@@ -66,7 +62,7 @@ public class AppStartupListener {
 
 	@Autowired
 	GoogleApiService googleApiSvc;
-	
+
 	@Autowired
 	MailJetService mailJetSvc;
 
@@ -87,7 +83,6 @@ public class AppStartupListener {
 			creerAnnonce();
 			creerVehiculesSociete();
 		});
-		mailJetSvc.sendCancellationEmailTo("alex.behaghel@gmail.com");
 	}
 
 	private void creerAnnonce() {

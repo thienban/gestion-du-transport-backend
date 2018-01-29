@@ -46,6 +46,7 @@ public class GoogleApiService {
 		return info;
 	}
 
+	@SuppressWarnings("finally")
 	public Annonce populateTrajetInfo(Annonce annonce) {
 		try {
 			TrajetInfo info = getTrajetInfo(annonce.getAdresseDepart(), annonce.getAdresseArrive());
