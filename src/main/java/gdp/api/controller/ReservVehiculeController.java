@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.ReserverVehicule;
+import gdp.api.entities.ReserverVehiculeFront;
+import gdp.api.entities.VehiculeSociete;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.ReserverVehiculeRepository;
 import gdp.api.repository.VehiculeRepository;
@@ -43,16 +45,22 @@ public class ReservVehiculeController {
 	 * alerter les chauffeurs
 	 */
 	@PostMapping(path = "/creer")
-	public List<ReserverVehicule> creerReservations(@RequestBody Map<String, Integer> body) {
-		Integer reserver_id = body.get("ReserverVehicule_id");
+	public List<ReserverVehicule> creerReservations(@RequestBody ReserverVehiculeFront reservation) {
+		Integer reserver_id = reservation.getId_vehicule()
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		Collaborateur collab = collabRepo.findByEmail(email);
-		Annonce annonce = annonceRepo.findOne(annonce_id);
-		if (annonce.getNbPlacesRestantes() > 0) {
-			List<Collaborateur> passagers = annonce.getPassagers();
-			passagers.add(collab);
-			annonce.setPassagers(passagers);
-			annonceRepo.save(annonce);
+		
+		Collaborateur passager = collabRepo.findByEmail(email);
+		VehiculeSociete vehicule = vehiculeRepo.findOne(reserver_id);
+		ReserverVehicule reserver = reserverRepo.findOne(reserver_id);
+		
+		if (!reserver.isOptionChauffeur()) {
+			
+			reserver.setPassager(passager);
+			reserver.setVehicule(vehicule);
+			reserver.setDisponible(false);
+			
+			reserverRepo.save(reserver);
+			//ajouter une voiture, passager, creer la reservation
 		}
 		return mesReservations();
 	}
