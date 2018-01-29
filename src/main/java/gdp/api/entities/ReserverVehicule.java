@@ -30,7 +30,7 @@ public class ReserverVehicule {
 	private boolean optionChauffeur;
 	
 	@Column(name="DISPONIBLE")
-	private boolean disponible;
+	private boolean disponible = true;
 	
 	@Column(nullable=false)
 	private LocalDateTime dateReservation;
