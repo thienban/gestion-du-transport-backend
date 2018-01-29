@@ -37,8 +37,10 @@ public class ReservVehiculeController {
 	public List<ReserverVehicule> ListVehicule() {
 		return reserverRepo.findAll();
 	}
+	
 	/**
 	 * retourne les reservations dont l'utilisateur courant est passager
+	   ReserverVehicule
 	 */
 	@GetMapping(path = "/me")
 	public List<ReserverVehicule> mesReservations() {

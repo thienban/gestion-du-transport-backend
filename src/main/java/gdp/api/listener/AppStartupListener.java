@@ -19,6 +19,7 @@ import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Marque;
 import gdp.api.entities.Modele;
+import gdp.api.entities.ReserverVehicule;
 import gdp.api.entities.Role;
 import gdp.api.entities.StatusVehicule;
 import gdp.api.entities.VehiculeCovoit;
@@ -29,10 +30,12 @@ import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.MarqueRepository;
 import gdp.api.repository.ModeleRepository;
+import gdp.api.repository.ReserverVehiculeRepository;
 import gdp.api.repository.VehiculeRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
+
 
 @Component
 public class AppStartupListener {
@@ -61,7 +64,10 @@ public class AppStartupListener {
 
 	@Autowired
 	VehiculeRepository vehiculeRepo;
-
+	
+	@Autowired
+	ReserverVehiculeRepository reserverVRepo;
+	
 	@Autowired
 	GoogleApiService googleApiSvc;
 
@@ -81,6 +87,7 @@ public class AppStartupListener {
 			collabRepo.save(collabs);
 			creerAnnonce();
 			creerVehiculesSociete();
+			creerReservationVehicule();
 		});
 	}
 
@@ -104,8 +111,10 @@ public class AppStartupListener {
 			annonce.setAuteur(auteur);
 			if (i <= 7) {
 				annonce.setDateDepart(LocalDateTime.now().plusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().plusDays(i+10));
 			} else {
 				annonce.setDateDepart(LocalDateTime.now().minusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().minusDays(i+10));
 			}
 
 			annonce.setVehicule(v1);
@@ -183,5 +192,23 @@ public class AppStartupListener {
 
 		}
 
+	}
+	
+	public void creerReservationVehicule() {
+		
+		for (int i = 1; i <= 15; i++) {
+			
+			ReserverVehicule reserV = new ReserverVehicule();
+			reserV.setChauffeur(collabRepo.findOne(1));
+			reserV.setPassager(collabRepo.findOne(1));
+			reserV.setOptionChauffeur(true);
+			reserV.setDateReservation(LocalDateTime.of(2018, i, 14, 9, i));
+			reserV.setDateRetour(LocalDateTime.of(2018, i, 14, 17, i));
+			reserV.setDisponible(false);
+			reserV.setVehicule(vehiculeRepo.findOne(i));
+		
+			reserverVRepo.save(reserV);
+		
+		}
 	}
 }
