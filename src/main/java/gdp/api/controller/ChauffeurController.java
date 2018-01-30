@@ -17,7 +17,7 @@ import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.ReserverVehiculeRepository;
 
 @RestController
-@RequestMapping("chauffeur")
+@RequestMapping("chauffeurs")
 public class ChauffeurController {
 	
 	@Autowired
@@ -41,7 +41,7 @@ public class ChauffeurController {
 	
 	@PostMapping(path="/accept")
 	public ReserverVehicule courseAccepte(@RequestBody Map<String, Integer> body) {
-		Integer reservation_id = body.get("ReserverVehicule_id");
+		Integer reservation_id = body.get("reservationVehicule_id");
 		ReserverVehicule reservation = reserverRepo.findOne(reservation_id);
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur chauffeur =  collabRepo.findByEmail(email);
