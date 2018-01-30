@@ -40,6 +40,9 @@ public class VehiculeSociete {
 	@ManyToOne
 	@JoinColumn(name="ID_MODELE")
 	private Modele modele;
+	
+	@Column(name="DISPONIBLE")
+	private boolean disponible;
 
 	public VehiculeSociete() {
 		
@@ -109,7 +112,13 @@ public class VehiculeSociete {
 		this.modele = modele;
 	}
 	
-	
-	
+	public boolean isDisponible() {
+		return disponible;
+	}
+
+
+	public void setDisponible(boolean disponible) {
+		this.disponible = disponible;
+	}
 	
 }
