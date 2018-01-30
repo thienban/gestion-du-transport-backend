@@ -199,6 +199,10 @@ public class AppStartupListener {
 			reserV.setVehicule(vehiculeRepo.findOne(i));
 			reserverVRepo.save(reserV);
 		}
+
+		ReserverVehicule reserV = reserverVRepo.findOne(1);
+		reserV.setChauffeur(collabRepo.findOne(1));
+		reserverVRepo.save(reserV);
 		LOGGER.info("Resa véhicules sauvées");
 	}
 }
