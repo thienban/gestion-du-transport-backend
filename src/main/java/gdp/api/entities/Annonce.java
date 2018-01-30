@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -23,6 +24,7 @@ import com.google.maps.model.Distance;
 import com.google.maps.model.Duration;
 
 @Entity
+@Table(name="annonce")
 public class Annonce {
 	
 	@Id
