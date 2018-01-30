@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.ReserverVehicule;
+import gdp.api.entities.VehiculeSociete;
 
 public interface ReserverVehiculeRepository extends JpaRepository<ReserverVehicule, Integer>{
 	
@@ -17,4 +18,6 @@ public interface ReserverVehiculeRepository extends JpaRepository<ReserverVehicu
 	public List<ReserverVehicule> findToConfirmReservations(Integer chauffeurId);
 	
 	public List<ReserverVehicule> findByChauffeur(Collaborateur chauffeur);
+	
+	public List<ReserverVehicule> findByVehicule(VehiculeSociete vehicule);
 }
