@@ -200,7 +200,6 @@ public class AppStartupListener {
 			reserV.setOptionChauffeur(true);
 			reserV.setDateReservation(LocalDateTime.of(2018, i, 14, 9, i));
 			reserV.setDateRetour(LocalDateTime.of(2018, i, 14, 17, i));
-			reserV.setDisponible(false);
 			reserV.setVehicule(vehiculeRepo.findOne(i));
 		
 			reserverVRepo.save(reserV);
