@@ -63,17 +63,24 @@ public class ReservVehiculeController {
 		
 		Collaborateur passager = collabRepo.findByEmail(email);
 		VehiculeSociete vehicule = vehiculeRepo.findOne(vehicule_id);
+		vehicule.setDisponible(false);
 		
 		ReserverVehicule reserver = new ReserverVehicule();
 		reserver.setPassager(passager);
 		reserver.setVehicule(vehicule);
 		reserver.setDateReservation(dateReservation);
 		reserver.setDateRetour(dateRetour);
-		reserver.setDisponible(false);
 		reserver.setOptionChauffeur(optionChauffeur);
 
 		reserverRepo.save(reserver);
+		vehiculeRepo.save(vehicule);
 		return mesReservations();
+	}
+	
+	@GetMapping(path = "/available")
+	public List<VehiculeSociete> vehiculesDispos() {
+		
+		return vehiculeRepo.findAll();
 	}
 
 }

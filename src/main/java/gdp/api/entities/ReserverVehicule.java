@@ -29,9 +29,6 @@ public class ReserverVehicule {
 	@Column(name="OPTION_CHAUFFEUR")
 	private boolean optionChauffeur;
 	
-	@Column(name="DISPONIBLE")
-	private boolean disponible;
-	
 	@Column(nullable=false)
 	private LocalDateTime dateReservation;
 	
@@ -88,17 +85,6 @@ public class ReserverVehicule {
 	public void setOptionChauffeur(boolean optionChauffeur) {
 		this.optionChauffeur = optionChauffeur;
 	}
-
-
-	public boolean isDisponible() {
-		return disponible;
-	}
-
-
-	public void setDisponible(boolean disponible) {
-		this.disponible = disponible;
-	}
-
 
 	public LocalDateTime getDateReservation() {
 		return dateReservation;
