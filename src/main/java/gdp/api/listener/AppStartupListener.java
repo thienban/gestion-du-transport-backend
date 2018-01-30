@@ -200,7 +200,6 @@ public class AppStartupListener {
 			reserV.setOptionChauffeur(true);
 			reserV.setDateReservation(LocalDateTime.of(2018, 1, 30, 9, i));
 			reserV.setDateRetour(LocalDateTime.of(2018, 1, 30, 17, i));
-			reserV.setDisponible(false);
 			reserV.setVehicule(vehiculeRepo.findOne(i));
 		
 			reserverVRepo.save(reserV);
@@ -208,4 +207,5 @@ public class AppStartupListener {
 		}
 	}
 }
+
 
