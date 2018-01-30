@@ -52,36 +52,6 @@ public class AdminController {
 		return categRepo.findAll();
 	}
 	
-	
-	@PostMapping(path="/vehicules/marque")
-	public Marque createOrGetMarque(@RequestBody String marque) {
-		//Si cette marque existe déjà, la renvoyer
-		if (marqueRepo.findByLibelle(marque) != null) {
-			return marqueRepo.findByLibelle(marque);
-		//sinon, la créer en base
-		} else {
-			Marque newMarque = new Marque();
-			newMarque.setLibelle(marque);
-			marqueRepo.save(newMarque);
-			return newMarque;			
-		}
-	}
-	
-	@PostMapping(path="/vehicules/modele")
-	public Modele createOrGetModele(@RequestBody String modele) {
-		//Si ce modèle existe déjà, le renvoyer
-		if (modeleRepo.findByLibelle(modele) != null) {
-			return modeleRepo.findByLibelle(modele);
-		//sinon, le créer en base
-		} else {
-			Modele newModele = new Modele();
-			newModele.setLibelle(modele);
-			modeleRepo.save(newModele);
-			return newModele;			
-		}
-		
-	}
-	
 	@PostMapping(path="/vehicules/creer")
 	public List<VehiculeSociete> creerVehicule(@RequestBody VehiculeSociete nouvVehicule) {
 		nouvVehicule.setStatus(StatusVehicule.EN_SERVICE);

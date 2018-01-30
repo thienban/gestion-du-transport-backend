@@ -33,13 +33,11 @@ public class VehiculeSociete {
 	@JoinColumn(name="ID_CATEGORIE")
 	private Categorie categorie;
 	
-	@ManyToOne()
-	@JoinColumn(name="ID_MARQUE")
-	private Marque marque;
+	@Column(name="marque")
+	private String marque;
 	
-	@ManyToOne
-	@JoinColumn(name="ID_MODELE")
-	private Modele modele;
+	@Column(name="modele")
+	private String modele;
 	
 	@Column(name="DISPONIBLE")
 	private boolean disponible;
@@ -96,19 +94,19 @@ public class VehiculeSociete {
 		this.categorie = categorie;
 	}
 
-	public Marque getMarque() {
+	public String getMarque() {
 		return marque;
 	}
 
-	public void setMarque(Marque marque) {
+	public void setMarque(String marque) {
 		this.marque = marque;
 	}
 
-	public Modele getModele() {
+	public String getModele() {
 		return modele;
 	}
 
-	public void setModele(Modele modele) {
+	public void setModele(String modele) {
 		this.modele = modele;
 	}
 	

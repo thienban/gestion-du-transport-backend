@@ -163,21 +163,14 @@ public class AppStartupListener {
 		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
 		categorieRepo.save(categories);
 
-		Marque m2 = new Marque();
-		m2.setLibelle("Peugeot");
-		marqueRepo.save(m2);
-
-		Modele mod = new Modele();
-		mod.setLibelle("206");
-		modeleRepo.save(mod);
 
 		for (int i = 1; i <= 15; i++) {
 
 			VehiculeSociete vehicule = new VehiculeSociete();
 			vehicule.setImmatriculation("" + (char) (64 + (i % 26 + 1)) + (char) (64 + (i % 26 + 1))
 					+ String.format("-%03d-", i) + (char) (64 + (i % 26 + 1)) + (char) (64 + (i % 26 + 1)));
-			vehicule.setMarque(m2);
-			vehicule.setModele(mod);
+			vehicule.setMarque("Peugeot");
+			vehicule.setModele("206");
 			vehicule.setCategorie(categorieRepo.findOne(4));
 			vehicule.setNbPlaces(4);
 			vehicule.setStatus(StatusVehicule.EN_SERVICE);
