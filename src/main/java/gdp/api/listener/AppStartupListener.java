@@ -1,6 +1,8 @@
 package gdp.api.listener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,6 @@ import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
 import rx.Observable;
 
-
 @Component
 public class AppStartupListener {
 	final static Logger LOGGER = LoggerFactory.getLogger(AppStartupListener.class);
@@ -60,10 +61,10 @@ public class AppStartupListener {
 
 	@Autowired
 	VehiculeRepository vehiculeRepo;
-	
+
 	@Autowired
 	ReserverVehiculeRepository reserverVRepo;
-	
+
 	@Autowired
 	GoogleApiService googleApiSvc;
 
@@ -107,10 +108,10 @@ public class AppStartupListener {
 			annonce.setAuteur(auteur);
 			if (i <= 7) {
 				annonce.setDateDepart(LocalDateTime.now().plusDays(i));
-				annonce.setDateArrivee(LocalDateTime.now().plusDays(i+10));
+				annonce.setDateArrivee(LocalDateTime.now().plusDays(i + 10));
 			} else {
 				annonce.setDateDepart(LocalDateTime.now().minusDays(i));
-				annonce.setDateArrivee(LocalDateTime.now().minusDays(i+10));
+				annonce.setDateArrivee(LocalDateTime.now().minusDays(i + 10));
 			}
 
 			annonce.setVehicule(v1);
@@ -161,8 +162,7 @@ public class AppStartupListener {
 		categories.add(new Categorie("Berlines taille L"));
 		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
 		categorieRepo.save(categories);
-		
-		
+
 		Marque m2 = new Marque();
 		m2.setLibelle("Peugeot");
 		marqueRepo.save(m2);
@@ -183,28 +183,29 @@ public class AppStartupListener {
 			vehicule.setStatus(StatusVehicule.EN_SERVICE);
 			vehicule.setPhoto(
 					"http://1.bp.blogspot.com/-eGIZoc5Pqv8/TcLUcaGjSjI/AAAAAAAAGr0/0TvqE1p8wjY/s1600/car%2Bweapon%2Bmod.jpg");
-
 			vehiculeRepo.save(vehicule);
-
 		}
+		LOGGER.info("véhicules sauvées");
 
 	}
-	
+
 	public void creerReservationVehicule() {
-		
-		for (int i = 1; i <= 15; i++) {
-			
+		LOGGER.info("creerReservationVehicule");
+		for (int i = 1; i <= 3; i++) {
+			LOGGER.info(Math.round(24 / i) + "");
+
 			ReserverVehicule reserV = new ReserverVehicule();
-			reserV.setChauffeur(collabRepo.findOne(i));
 			reserV.setPassager(collabRepo.findOne(i));
 			reserV.setOptionChauffeur(true);
-			reserV.setDateReservation(LocalDateTime.of(2018, i, 14, 9, i));
-			reserV.setDateRetour(LocalDateTime.of(2018, i, 14, 17, i));
+			int hourOfDep = Math.round(12 / i);
+			LocalDateTime depart = LocalDateTime.of(LocalDate.now(), LocalTime.of(hourOfDep, 15));
+			LOGGER.info(depart.toString());
+
+			reserV.setDateReservation(depart);
+			reserV.setDateRetour(depart.plusHours(2));
 			reserV.setVehicule(vehiculeRepo.findOne(i));
-		
 			reserverVRepo.save(reserV);
-		
 		}
+		LOGGER.info("Resa véhicules sauvées");
 	}
 }
-

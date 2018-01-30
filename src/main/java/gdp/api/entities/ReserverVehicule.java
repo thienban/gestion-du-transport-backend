@@ -26,7 +26,7 @@ public class ReserverVehicule {
 	@ManyToOne
 	private VehiculeSociete vehicule;
 	
-	@Column(name="OPTION_CHAUFFEUR")
+	@Column(name="option_chauffeur")
 	private boolean optionChauffeur;
 	
 	@Column(nullable=false)
