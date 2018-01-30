@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
 import gdp.api.entities.Marque;
 import gdp.api.entities.Modele;
+import gdp.api.entities.ReserverVehicule;
 import gdp.api.entities.Role;
 import gdp.api.entities.StatusVehicule;
 import gdp.api.entities.VehiculeCovoit;
@@ -29,11 +29,12 @@ import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.MarqueRepository;
 import gdp.api.repository.ModeleRepository;
+import gdp.api.repository.ReserverVehiculeRepository;
 import gdp.api.repository.VehiculeRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
-import gdp.api.services.MailJetService;
 import rx.Observable;
+
 
 @Component
 public class AppStartupListener {
@@ -59,15 +60,15 @@ public class AppStartupListener {
 
 	@Autowired
 	VehiculeRepository vehiculeRepo;
-
+	
+	@Autowired
+	ReserverVehiculeRepository reserverVRepo;
+	
 	@Autowired
 	GoogleApiService googleApiSvc;
 
-	@Autowired
-	MailJetService mailJetSvc;
-
 	@EventListener(ApplicationReadyEvent.class)
-	public void initDatabase() throws JSONException {
+	public void initDatabase() {
 		LOGGER.info("DataBase Initialisation");
 		AtomicInteger counter = new AtomicInteger();
 		http.getCollabService().getCollaborateurs(30).flatMap(collabs -> Observable.from(collabs)).map(collab -> {
@@ -82,6 +83,7 @@ public class AppStartupListener {
 			collabRepo.save(collabs);
 			creerAnnonce();
 			creerVehiculesSociete();
+			creerReservationVehicule();
 		});
 	}
 
@@ -105,8 +107,10 @@ public class AppStartupListener {
 			annonce.setAuteur(auteur);
 			if (i <= 7) {
 				annonce.setDateDepart(LocalDateTime.now().plusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().plusDays(i+10));
 			} else {
 				annonce.setDateDepart(LocalDateTime.now().minusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().minusDays(i+10));
 			}
 
 			annonce.setVehicule(v1);
@@ -157,7 +161,8 @@ public class AppStartupListener {
 		categories.add(new Categorie("Berlines taille L"));
 		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
 		categorieRepo.save(categories);
-
+		
+		
 		Marque m2 = new Marque();
 		m2.setLibelle("Peugeot");
 		marqueRepo.save(m2);
@@ -184,4 +189,23 @@ public class AppStartupListener {
 		}
 
 	}
+	
+	public void creerReservationVehicule() {
+		
+		for (int i = 1; i <= 15; i++) {
+			
+			ReserverVehicule reserV = new ReserverVehicule();
+			reserV.setChauffeur(collabRepo.findOne(i));
+			reserV.setPassager(collabRepo.findOne(i));
+			reserV.setOptionChauffeur(true);
+			reserV.setDateReservation(LocalDateTime.of(2018, i, 14, 9, i));
+			reserV.setDateRetour(LocalDateTime.of(2018, i, 14, 17, i));
+			reserV.setDisponible(false);
+			reserV.setVehicule(vehiculeRepo.findOne(i));
+		
+			reserverVRepo.save(reserV);
+		
+		}
+	}
 }
+
