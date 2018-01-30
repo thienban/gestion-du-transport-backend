@@ -12,7 +12,7 @@ import gdp.api.entities.Collaborateur;
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
 	public List<Annonce> findByAuteur(Collaborateur collab);
 
-	@Query(value = "SELECT * FROM (SELECT adresse_depart AS adresse FROM annonce UNION SELECT adresse_arrive FROM annonce) WHERE LOWER(adresse) LIKE LOWER('%' || ?1 || '%')", nativeQuery = true)
+	@Query(value = "SELECT * FROM (SELECT adresse_depart AS adresse FROM annonce UNION SELECT adresse_arrive AS adresse FROM annonce) AS adresses WHERE LOWER('%' || ?1 || '%')", nativeQuery = true)
 	public List<String> selectAllAdresses(String input);
 
 	@Query("SELECT a FROM Annonce a WHERE ?1 NOT IN a.passagers AND ?1 != a.auteur AND a.dateDepart < CURRENT_TIMESTAMP")
