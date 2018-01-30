@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +42,16 @@ public class AdminController {
 		return vehiculeRepo.findAll();
 	}
 	
+	@GetMapping(path="/vehicules/{immat}")
+	public VehiculeSociete findVehiculeByImmat(@PathVariable(name="immat") String immat) {
+		return vehiculeRepo.findByImmatriculation(immat);
+	}
+	
 	@GetMapping(path="/vehicules/categories")
 	public List<Categorie> findAllCategories(){
 		return categRepo.findAll();
 	}
+	
 	
 	@PostMapping(path="/vehicules/marque")
 	public Marque createOrGetMarque(@RequestBody String marque) {
