@@ -6,4 +6,6 @@ import gdp.api.entities.VehiculeSociete;
 
 public interface VehiculeRepository extends JpaRepository<VehiculeSociete, Integer>{
 
+	public VehiculeSociete findByImmatriculation(String immat); 
+	
 }
