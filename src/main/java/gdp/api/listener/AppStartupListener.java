@@ -183,19 +183,17 @@ public class AppStartupListener {
 
 	public void creerReservationVehicule() {
 		LOGGER.info("creerReservationVehicule");
-		for (int i = 1; i <= 3; i++) {
-			LOGGER.info(Math.round(24 / i) + "");
 
+		for (int i = 1; i <= 3; i++) {
 			ReserverVehicule reserV = new ReserverVehicule();
 			reserV.setPassager(collabRepo.findOne(i));
 			reserV.setOptionChauffeur(true);
-			int hourOfDep = Math.round(12 / i);
-			LocalDateTime depart = LocalDateTime.of(LocalDate.now(), LocalTime.of(hourOfDep, 15));
+			LocalDateTime depart = LocalDateTime.of(LocalDate.now(), LocalTime.of(14+i, 15));
 			LOGGER.info(depart.toString());
 
 			reserV.setDateReservation(depart);
 			reserV.setDateRetour(depart.plusHours(2));
-			
+
 			VehiculeSociete vehicule = new VehiculeSociete();
 			vehicule = vehiculeRepo.findOne(i);
 			reserV.setVehicule(vehiculeRepo.findOne(i));
