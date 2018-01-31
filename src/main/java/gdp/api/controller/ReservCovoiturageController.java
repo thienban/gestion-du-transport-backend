@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mailjet.client.errors.MailjetException;
+import com.mailjet.client.errors.MailjetSocketTimeoutException;
+
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Collaborateur;
+import gdp.api.entities.StatusCovoit;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CollaborateurRepository;
+import gdp.api.services.MailJetService;
 
 @RestController
 @RequestMapping("reservations")
@@ -27,6 +32,9 @@ public class ReservCovoiturageController {
 
 	@Autowired
 	private CollaborateurRepository collabRepo;
+
+	@Autowired
+	private MailJetService mailJetSvc;
 
 	@GetMapping()
 	public List<Annonce> ListAnnonce() {
@@ -41,7 +49,7 @@ public class ReservCovoiturageController {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findAll().stream().filter(annonce -> {
-			return annonce.getPassagers().contains(collab);
+			return annonce.getPassagers().contains(collab) || annonce.getAnnulations().contains(collab);
 		}).collect(Collectors.toList());
 	}
 
@@ -55,7 +63,9 @@ public class ReservCovoiturageController {
 		Collaborateur collab = collabRepo.findByEmail(email);
 		return annonceRepo.findByDateDepartGreaterThanAndAuteurIsNot(LocalDateTime.now(), collab).stream()
 				.filter(annonce -> {
-					return !annonce.getPassagers().contains(collab) && annonce.getVehicule().getNbPlaces() > annonce.getPassagers().size();
+					return !annonce.getPassagers().contains(collab)
+							&& annonce.getVehicule().getNbPlaces() > annonce.getPassagers().size()
+							&& !StatusCovoit.ANNULE.equals(annonce.getStatusCovoit());
 				}).collect(Collectors.toList());
 	}
 
@@ -64,17 +74,62 @@ public class ReservCovoiturageController {
 	 * passagers de l'annonce dont l'id est passé dans le corps de la requete
 	 */
 	@PostMapping(path = "/creer")
-	public List<Annonce> creerReservations(@RequestBody Map<String, Integer> body) {
+	public List<Annonce> creerReservation(@RequestBody Map<String, Integer> body) {
 		Integer annonce_id = body.get("annonce_id");
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Collaborateur collab = collabRepo.findByEmail(email);
 		Annonce annonce = annonceRepo.findOne(annonce_id);
+
 		if (annonce.getNbPlacesRestantes() > 0) {
+			// add collab to passenger list :
 			List<Collaborateur> passagers = annonce.getPassagers();
 			passagers.add(collab);
 			annonce.setPassagers(passagers);
+
+			// remove collab from cancellation list :
+			List<Collaborateur> annulations = annonce.getAnnulations();
+			annulations.remove(collab);
+			annonce.setAnnulations(annulations);
+
+			// save annonce
 			annonceRepo.save(annonce);
 		}
+		return mesReservations();
+	}
+
+	/**
+	 * annule une reservation
+	 * @param body {annonce_id : value}
+	 * @return
+	 * @throws MailjetException
+	 * @throws MailjetSocketTimeoutException
+	 */
+	@PostMapping(path = "/annuler")
+	public List<Annonce> cancelReservation(@RequestBody Map<String, Integer> body)
+			throws MailjetException, MailjetSocketTimeoutException {
+		Integer annonce_id = body.get("annonce_id");
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Collaborateur collab = collabRepo.findByEmail(email);
+		Annonce annonce = annonceRepo.findOne(annonce_id);
+
+		// remove collab from passenger list
+		List<Collaborateur> passagers = annonce.getPassagers();
+		passagers.remove(collab);
+		annonce.setPassagers(passagers);
+
+		// Add collab to cancellation list :
+		List<Collaborateur> annulations = annonce.getAnnulations();
+		annulations.add(collab);
+		annonce.setAnnulations(annulations);
+
+		// save annonce
+		annonceRepo.save(annonce);
+
+		// send confirmation emails :
+		// String monEmail = "alex.behaghel@gmail.com";
+		mailJetSvc.sendResaCancellationEmailTo(collab.getEmail(), annonce);
+		mailJetSvc.sendPassagerCancellationEmailTo(annonce.getAuteur().getEmail(), annonce);
+
 		return mesReservations();
 	}
 }

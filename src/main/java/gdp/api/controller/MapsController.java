@@ -28,11 +28,14 @@ public class MapsController {
 
 	@GetMapping(path = "/autocomplete/{input}")
 	public List<String> getPredictions(@PathVariable String input) {
-		List<String> knownAdresses = annonceRepo.selectAllAdresses(input).stream()
-				.map(adresse -> adresse.replaceAll("\\d", "").trim()).distinct().collect(Collectors.toList());
+		/*
+		 * List<String> knownAdresses = annonceRepo.selectAllAdresses(input).stream()
+		 * .map(adresse -> adresse.replaceAll("\\d",
+		 * "").trim()).distinct().collect(Collectors.toList());
+		 */
 		List<String> googleAdresses = googleApiSvc.autocompleteAdress(input);
-		knownAdresses.addAll(googleAdresses);
-		return knownAdresses;
+		// knownAdresses.addAll(googleAdresses);
+		return googleAdresses;
 	}
 
 	@GetMapping(value = "/directions")

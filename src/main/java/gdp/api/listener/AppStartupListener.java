@@ -1,6 +1,8 @@
 package gdp.api.listener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +19,18 @@ import org.springframework.stereotype.Component;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
-import gdp.api.entities.Marque;
-import gdp.api.entities.Modele;
+
+import gdp.api.entities.ReserverVehicule;
 import gdp.api.entities.Role;
 import gdp.api.entities.StatusVehicule;
 import gdp.api.entities.VehiculeCovoit;
 import gdp.api.entities.VehiculeSociete;
-import gdp.api.repository.AdresseRepository;
 import gdp.api.repository.AnnonceRepository;
 import gdp.api.repository.CategorieRepository;
 import gdp.api.repository.CollaborateurRepository;
 import gdp.api.repository.MarqueRepository;
 import gdp.api.repository.ModeleRepository;
+import gdp.api.repository.ReserverVehiculeRepository;
 import gdp.api.repository.VehiculeRepository;
 import gdp.api.services.GoogleApiService;
 import gdp.api.services.HttpService;
@@ -48,9 +50,6 @@ public class AppStartupListener {
 	AnnonceRepository annonceRepo;
 
 	@Autowired
-	AdresseRepository adresseRepo;
-
-	@Autowired
 	MarqueRepository marqueRepo;
 
 	@Autowired
@@ -61,6 +60,9 @@ public class AppStartupListener {
 
 	@Autowired
 	VehiculeRepository vehiculeRepo;
+
+	@Autowired
+	ReserverVehiculeRepository reserverVRepo;
 
 	@Autowired
 	GoogleApiService googleApiSvc;
@@ -81,6 +83,7 @@ public class AppStartupListener {
 			collabRepo.save(collabs);
 			creerAnnonce();
 			creerVehiculesSociete();
+			creerReservationVehicule();
 		});
 	}
 
@@ -97,15 +100,17 @@ public class AppStartupListener {
 				"48 Vine Avenue, Highland Park, IL, United States", "281 Redwood Drive, Lancaster, PA, United States");
 
 		Random random = new Random();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 1; i < 20; i++) {
 
 			Collaborateur auteur = collabRepo.findOne(i);
 			Annonce annonce = new Annonce();
 			annonce.setAuteur(auteur);
 			if (i <= 7) {
 				annonce.setDateDepart(LocalDateTime.now().plusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().plusDays(i + 10));
 			} else {
 				annonce.setDateDepart(LocalDateTime.now().minusDays(i));
+				annonce.setDateArrivee(LocalDateTime.now().minusDays(i + 10));
 			}
 
 			annonce.setVehicule(v1);
@@ -156,32 +161,50 @@ public class AppStartupListener {
 		categories.add(new Categorie("Berlines taille L"));
 		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
 		categorieRepo.save(categories);
-		
-		
-		Marque m2 = new Marque();
-		m2.setLibelle("Peugeot");
-		marqueRepo.save(m2);
-
-		Modele mod = new Modele();
-		mod.setLibelle("206");
-		modeleRepo.save(mod);
 
 		for (int i = 1; i <= 15; i++) {
 
 			VehiculeSociete vehicule = new VehiculeSociete();
 			vehicule.setImmatriculation("" + (char) (64 + (i % 26 + 1)) + (char) (64 + (i % 26 + 1))
 					+ String.format("-%03d-", i) + (char) (64 + (i % 26 + 1)) + (char) (64 + (i % 26 + 1)));
-			vehicule.setMarque(m2);
-			vehicule.setModele(mod);
+			vehicule.setMarque("Peugeot");
+			vehicule.setModele("206");
 			vehicule.setCategorie(categorieRepo.findOne(4));
 			vehicule.setNbPlaces(4);
 			vehicule.setStatus(StatusVehicule.EN_SERVICE);
+			vehicule.setDisponible(true);
 			vehicule.setPhoto(
 					"http://1.bp.blogspot.com/-eGIZoc5Pqv8/TcLUcaGjSjI/AAAAAAAAGr0/0TvqE1p8wjY/s1600/car%2Bweapon%2Bmod.jpg");
-
 			vehiculeRepo.save(vehicule);
+		}
+		LOGGER.info("véhicules sauvées");
 
+	}
+
+	public void creerReservationVehicule() {
+		LOGGER.info("creerReservationVehicule");
+
+		for (int i = 1; i <= 3; i++) {
+			ReserverVehicule reserV = new ReserverVehicule();
+			reserV.setPassager(collabRepo.findOne(i));
+			reserV.setOptionChauffeur(true);
+			LocalDateTime depart = LocalDateTime.of(LocalDate.now(), LocalTime.of(14 + i, 15));
+			LOGGER.info(depart.toString());
+
+			reserV.setDateReservation(depart);
+			reserV.setDateRetour(depart.plusHours(5));
+
+			VehiculeSociete vehicule = new VehiculeSociete();
+			vehicule = vehiculeRepo.findOne(i);
+			reserV.setVehicule(vehiculeRepo.findOne(i));
+			vehicule.setDisponible(false);
+			vehiculeRepo.save(vehicule);
+			reserverVRepo.save(reserV);
 		}
 
+		ReserverVehicule reserV = reserverVRepo.findOne(1);
+		reserV.setChauffeur(collabRepo.findOne(1));
+		reserverVRepo.save(reserV);
+		LOGGER.info("Resa véhicules sauvées");
 	}
 }

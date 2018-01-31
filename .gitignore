@@ -1,6 +1,9 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+### ENV ###
+set_env.bat
+
 ### STS ###
 .apt_generated
 .classpath

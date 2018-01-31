@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -23,6 +24,7 @@ import com.google.maps.model.Distance;
 import com.google.maps.model.Duration;
 
 @Entity
+@Table(name="annonce")
 public class Annonce {
 	
 	@Id
@@ -37,7 +39,6 @@ public class Annonce {
 
 	@Column(nullable=false)
 	private LocalDateTime dateArrivee;
-
 
 	@Enumerated(EnumType.STRING)
 	private StatusCovoit statusCovoit;
@@ -61,6 +62,10 @@ public class Annonce {
 	@Column
 	private Distance distance;
 
+	@ManyToMany
+	@JoinTable(name = "ANNULATIONS_COVOIT", joinColumns = @JoinColumn(name = "ANNONCE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PASSAGERS_ID", referencedColumnName = "ID"))
+	private List<Collaborateur> annulations = new ArrayList<>();
+	
 	@ManyToMany
 	@JoinTable(name = "RESERVATIONS_COVOIT", joinColumns = @JoinColumn(name = "ANNONCE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PASSAGERS_ID", referencedColumnName = "ID"))
 	private List<Collaborateur> passagers = new ArrayList<>();
@@ -162,5 +167,13 @@ public class Annonce {
 
 	public void setVehicule(VehiculeCovoit vehicule) {
 		this.vehicule = vehicule;
+	}
+
+	public List<Collaborateur> getAnnulations() {
+		return annulations;
+	}
+
+	public void setAnnulations(List<Collaborateur> annulations) {
+		this.annulations = annulations;
 	}
 }
