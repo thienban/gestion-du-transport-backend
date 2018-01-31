@@ -57,8 +57,8 @@ public class ReservVehiculeController {
 	 * puis sauvegarder la nouvelle réservation
 	 */
 	@PostMapping(path = "/creer")
-	public List<ReserverVehicule> creerReservations(@RequestBody ReserverVehiculeFront reservation) {
-		Integer vehicule_id = reservation.getId_vehicule();
+	public List<ReserverVehicule> creerReservations(@RequestBody ReserverVehicule reservation) {
+		Integer vehicule_id = reservation.getVehicule().getId();
 		LocalDateTime dateReservation = reservation.getDateReservation();
 		LocalDateTime dateRetour = reservation.getDateRetour();
 		Boolean optionChauffeur = reservation.isOptionChauffeur();
