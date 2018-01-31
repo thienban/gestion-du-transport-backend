@@ -188,11 +188,11 @@ public class AppStartupListener {
 			ReserverVehicule reserV = new ReserverVehicule();
 			reserV.setPassager(collabRepo.findOne(i));
 			reserV.setOptionChauffeur(true);
-			LocalDateTime depart = LocalDateTime.of(LocalDate.now(), LocalTime.of(14+i, 15));
+			LocalDateTime depart = LocalDateTime.of(LocalDate.now(), LocalTime.of(14 + i, 15));
 			LOGGER.info(depart.toString());
 
 			reserV.setDateReservation(depart);
-			reserV.setDateRetour(depart.plusHours(2));
+			reserV.setDateRetour(depart.plusHours(5));
 
 			VehiculeSociete vehicule = new VehiculeSociete();
 			vehicule = vehiculeRepo.findOne(i);
