@@ -172,6 +172,7 @@ public class AppStartupListener {
 			vehicule.setCategorie(categorieRepo.findOne(4));
 			vehicule.setNbPlaces(4);
 			vehicule.setStatus(StatusVehicule.EN_SERVICE);
+			vehicule.setDisponible(true);
 			vehicule.setPhoto(
 					"http://1.bp.blogspot.com/-eGIZoc5Pqv8/TcLUcaGjSjI/AAAAAAAAGr0/0TvqE1p8wjY/s1600/car%2Bweapon%2Bmod.jpg");
 			vehiculeRepo.save(vehicule);
@@ -194,7 +195,12 @@ public class AppStartupListener {
 
 			reserV.setDateReservation(depart);
 			reserV.setDateRetour(depart.plusHours(2));
+			
+			VehiculeSociete vehicule = new VehiculeSociete();
+			vehicule = vehiculeRepo.findOne(i);
 			reserV.setVehicule(vehiculeRepo.findOne(i));
+			vehicule.setDisponible(false);
+			vehiculeRepo.save(vehicule);
 			reserverVRepo.save(reserV);
 		}
 
