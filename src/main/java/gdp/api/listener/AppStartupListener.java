@@ -197,7 +197,12 @@ public class AppStartupListener {
 
 			reserV.setDateReservation(depart);
 			reserV.setDateRetour(depart.plusHours(2));
+			
+			VehiculeSociete vehicule = new VehiculeSociete();
+			vehicule = vehiculeRepo.findOne(i);
 			reserV.setVehicule(vehiculeRepo.findOne(i));
+			vehicule.setDisponible(false);
+			vehiculeRepo.save(vehicule);
 			reserverVRepo.save(reserV);
 		}
 
