@@ -29,8 +29,7 @@ public class ChauffeurController {
 	
 	@GetMapping()
 	public List<ReserverVehicule> aConfirmer() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return reserverRepo.findToConfirmReservations(collabRepo.findByEmail(email).getId());
+		return reserverRepo.findToConfirmReservations();
 	}
 	
 	@GetMapping(path="/me")

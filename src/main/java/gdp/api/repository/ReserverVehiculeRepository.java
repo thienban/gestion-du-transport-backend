@@ -14,8 +14,8 @@ public interface ReserverVehiculeRepository extends JpaRepository<ReserverVehicu
 	
 	public List<ReserverVehicule> findByDateReservationGreaterThanAndPassagerIsNot(LocalDateTime date, Collaborateur nopassager);
 	
-	@Query(value = "SELECT * FROM reserver_vehicule WHERE option_chauffeur = 1 AND (chauffeur_id IS NULL OR chauffeur_id != ?1)", nativeQuery = true)
-	public List<ReserverVehicule> findToConfirmReservations(Integer chauffeurId);
+	@Query(value = "SELECT * FROM reserver_vehicule WHERE option_chauffeur = 1 AND chauffeur_id IS NULL", nativeQuery = true)
+	public List<ReserverVehicule> findToConfirmReservations();
 	
 	public List<ReserverVehicule> findByChauffeur(Collaborateur chauffeur);
 	
