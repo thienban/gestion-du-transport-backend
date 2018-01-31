@@ -19,8 +19,7 @@ import org.springframework.stereotype.Component;
 import gdp.api.entities.Annonce;
 import gdp.api.entities.Categorie;
 import gdp.api.entities.Collaborateur;
-import gdp.api.entities.Marque;
-import gdp.api.entities.Modele;
+
 import gdp.api.entities.ReserverVehicule;
 import gdp.api.entities.Role;
 import gdp.api.entities.StatusVehicule;
@@ -101,7 +100,7 @@ public class AppStartupListener {
 				"48 Vine Avenue, Highland Park, IL, United States", "281 Redwood Drive, Lancaster, PA, United States");
 
 		Random random = new Random();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 1; i < 20; i++) {
 
 			Collaborateur auteur = collabRepo.findOne(i);
 			Annonce annonce = new Annonce();
@@ -162,7 +161,6 @@ public class AppStartupListener {
 		categories.add(new Categorie("Berlines taille L"));
 		categories.add(new Categorie("SUV, Tout-terrains et Pick-ups"));
 		categorieRepo.save(categories);
-
 
 		for (int i = 1; i <= 15; i++) {
 

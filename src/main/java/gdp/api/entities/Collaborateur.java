@@ -33,7 +33,6 @@ public class Collaborateur {
 	private Role role;
 
 	@Column(nullable = false)
-
 	private String nom;
 
 	@Column(nullable = false)
