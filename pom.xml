@@ -172,7 +172,7 @@
 			<properties>
 				<profil>mysql</profil>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-				<jdbc.url>mysql://urdzxzw8wlyuxkbe:k4Pm0UsU6hCmsMpkwigX@blj3tfv12f3zoxj2winf-mysql.services.clever-cloud.com:3306/blj3tfv12f3zoxj2winf</jdbc.url>
+				<jdbc.url>jdbc:mysql://urdzxzw8wlyuxkbe:k4Pm0UsU6hCmsMpkwigX@blj3tfv12f3zoxj2winf-mysql.services.clever-cloud.com:3306/blj3tfv12f3zoxj2winf</jdbc.url>
 				<jdbc.username>urdzxzw8wlyuxkbe</jdbc.username>
 				<jdbc.password>k4Pm0UsU6hCmsMpkwigX</jdbc.password>
 			</properties>
