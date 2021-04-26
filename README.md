@@ -2,4 +2,4 @@
 
 Heroku: deploy app
 
-Clever cloud: deploy database
+Clever cloud: deploy MySQL database
